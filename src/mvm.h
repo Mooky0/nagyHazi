@@ -17,24 +17,23 @@ class Ugyfel{
     int szulEv; /// Az ügyfél születési éve
     int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott. A fogyasztás tömb mérete.
     double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
-    double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kWh] ?
+    double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
 public:
-    Ugyfel(std::string nev, int az, int ev, int kezdes = 0)
-        : nev(nev), id(az), szulEv(ev), miota(kezdes) {}
-    Ugyfel(const char * nev, int az, int ev, int kezdes = 0)
-        : nev(nev), id(az), szulEv(ev), miota(kezdes) {}
-    Ugyfel(Ugyfel& rhs){
-        this->nev = rhs.nev;
-        this->id = rhs.id;
-        this->szulEv = rhs.szulEv;
-        this->egyenleg = rhs.egyenleg;
-        this->fogyasztas = new double[this->miota];
-        for(int i=0; i < rhs.miota; i++){
-            this->fogyasztas[i] = rhs.fogyasztas[i];
-        }
-    }
+    Ugyfel(std::string nev, int az, int ev, int kezdes);
+    Ugyfel(const char * nev, int az, int ev, int kezdes);
+    Ugyfel(Ugyfel& rhs);
 
+    /// getter függvények:
+    std::string getNev() const;
+    int getId() const;
+    int getSzulEv() const;
+    int getMiota() const;
+    double getEgyenleg() const;
+
+    /// dtor csak felszabít
+    ~Ugyfel(){delete[] fogyasztas;}
 };
+std::ostream& operator<<(std::ostream& os, const Ugyfel& rhs);
 
 /// Dátum osztály, dátumok pontos tárolásához és könnyen kezelhetőségéhez.
 class Date{
