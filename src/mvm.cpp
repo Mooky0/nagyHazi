@@ -6,6 +6,8 @@
 //#define DEBUG
 #include "mvm.h"
 
+#include <utility>
+
 /// random global operatorok amik később lehet nem is kellenek, de nem tudok rendesen jó programot írni <3
 /*
 std::istream& operator>>(std::istream& is, std::string str){
@@ -19,7 +21,7 @@ std::istream& operator>>(std::istream& is, std::string str){
 
 /// Ügyfél osztály:
 Ugyfel::Ugyfel(std::string nev, int az, int ev, int kezdes = 0)
-        : nev(nev), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180){
+        : nev(std::move(nev)), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180){
     Pr("Ugyfél string ctor: " << this->nev);
     fogyasztas = new double[miota];
 }
@@ -52,6 +54,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
     this->szulEv = rhs.szulEv;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
+    delete[] fogyasztas;
     this->fogyasztas = new double[this->miota];
     for(int i=0; i < rhs.miota; i++){
         this->fogyasztas[i] = rhs.fogyasztas[i];
