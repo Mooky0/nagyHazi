@@ -15,7 +15,7 @@ MTRACE_H = memtrace.h # memtrace header fajlja
 CXX = g++ # a C fordito neve
 
 #fordítasi opciok
-CXXFLAGS = -pedantic -Wall # -DMEMTRACE
+CXXFLAGS = -pedantic -Wall -DMEMTRACE
 CXXFLAGS += -g # es legyeb debug info is
 LDFLAGS = -g # debug a linkelesnel is kell
 
