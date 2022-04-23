@@ -96,6 +96,10 @@ int Ugyfel::getSzulEv() const {return szulEv;}
 int Ugyfel::getMiota() const {return miota;}
 double Ugyfel::getEgyenleg() const {return egyenleg;}
 
+void Ugyfel::egyenlegLevon(double osszeg) {
+    egyenleg -= osszeg;
+}
+
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
     return nev == rhs.nev &&
            id == rhs.id &&
@@ -116,9 +120,19 @@ int Date::getEv() const {return ev;}
 int Date::getHo() const {return ho;}
 int Date::getNap() const {return nap;}
 /// Setterek:
-void Date::setEv(int ev) {Date::ev = ev;}
-void Date::setHo(int ho) {Date::ho = ho;}
-void Date::setNap(int nap) {Date::nap = nap;}
+void Date::setEv(int e) {Date::ev = e;}
+void Date::setHo(int h) {Date::ho = h;}
+void Date::setNap(int n) {Date::nap = n;}
+
+int Date::szokonapokSzama() const {
+    int evek = this->ev;
+
+    /// Ezt az évet számítani kell-e, (elmúlt-e már feb.)
+    if(this->ho <= 2)
+        evek--;
+
+    return evek / 4 - evek / 100 + evek / 400;
+}
 
 /// Operátorok: ostream:
 std::ostream& operator<<(std::ostream& os, const Date& rhs){
@@ -134,14 +148,30 @@ std::istream& operator>>(std::istream& is, Date& rhs){
     rhs = Date(ev, ho, nap);
     return is;
 }
+/// kivonás operátor
+int operator-(const Date &lhs, const Date &rhs) {
+    ///Első dátum előtt eltelt napok száma:
+    long int n1 = lhs.getEv() * 365 + lhs.getNap();
+    for (int i= 0; i<lhs.getHo()-1; i++)
+        n1 += honapNapjai[i];
+    n1 += lhs.szokonapokSzama();
 
-/// Szerződés osztály
-Szerzodes::Szerzodes(int e, int h, int n, Ugyfel kicsoda, int ar = 300, int az = 987)
-    :id(az), datum(e, h, n), ugyfel(kicsoda), ar(ar) {
-    std::cout << this->datum;
+    /// Második dátum előtt eltelt napok száma
+    long int n2 = rhs.getEv() * 365 + rhs.getNap();
+    for(int i=0; i<rhs.getHo()-1; i++)
+        n2 += honapNapjai[i];
+    n2 += rhs.szokonapokSzama();
+
+    return (int)(n1 - n2);
 }
 
-Szerzodes::Szerzodes(Date date, Ugyfel kicsoda, int ar = 300, int az = 987)
+/// Szerződés osztály
+Szerzodes::Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar = 300, int az = 987)
+    :id(az), datum(e, h, n), ugyfel(kicsoda), ar(ar) {
+    Pr(this->datum);
+}
+
+Szerzodes::Szerzodes(Date date, const Ugyfel& kicsoda, int ar = 300, int az = 987)
     : id(az), datum(date), ugyfel(kicsoda), ar(ar) {
     Pr("Szerződés ctor: " << this->datum);
 }
@@ -150,8 +180,6 @@ int Szerzodes::getId() const {return id;}
 Date Szerzodes::getDate() const {return datum;}
 Ugyfel& Szerzodes::getUgyfel() const {return (Ugyfel &) ugyfel;}
 int Szerzodes::getAr() const {return ar;}
-
-Szerzodes::~Szerzodes() = default;
 
 std::ostream& operator<<(std::ostream& os, Szerzodes& rhs){
     os << "Szerződés (" << rhs.getId() << ") az MVM és " <<  rhs.getUgyfel() << "\tközött: "
@@ -171,3 +199,16 @@ std::istream& operator>>(std::istream& is, Szerzodes& rhs){
     rhs.setDate(datum);
     return is;
 }
+
+/// Egyéb függvények:
+void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig) {
+    int interval = meddig - mettol;
+    double honapok = interval / 30.0;
+    double fizetendo = honapok * szerzodes.getAr();
+    Pr("napok =" << interval << " Honapk: " << honapok << " fizetendo: " << fizetendo);
+    Pr(szerzodes);
+    szerzodes.getUgyfel().Ugyfel::egyenlegLevon(fizetendo);
+    Pr(szerzodes);
+}
+
+

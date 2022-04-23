@@ -29,7 +29,7 @@ class Ugyfel{
     double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
     double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
 public:
-    Ugyfel() {miota = 0; fogyasztas = new double[miota]; std::cout << "Ugyfél 0param ctor" << std::endl;};
+    Ugyfel() {miota = 0; fogyasztas = new double[miota]; Pr("Ugyfél 0param ctor")};
     Ugyfel(std::string nev, int az, int ev, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const char * nev, int az, int ev, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const Ugyfel& rhs);
@@ -46,6 +46,10 @@ public:
     void setId(int az){this->id = az;}
     void setSzulEv(int szul){this->szulEv = szul;}
     void setMiota(int kezdes){this->miota = kezdes; delete [] fogyasztas; fogyasztas = new double[miota];}
+    void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
+
+    ///Az egyenlegből @param osszeg levonása
+    void egyenlegLevon(double osszeg);
 
     /// Egyenlőség viusgáló operátor a egyenleget és a fogyasztást nem viszgálja
     bool operator==(const Ugyfel &rhs) const;
@@ -68,6 +72,9 @@ std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
 
 std::istream& operator>>(std::istream& is, Ugyfel& rhs);
 
+/// Hónapokban a napok számának tárolására
+const int honapNapjai[12] = { 31, 28, 31, 30, 31, 30,
+                              31, 31, 30, 31, 30, 31 };
 
 /// Dátum osztály, dátumok pontos tárolásához és könnyen kezelhetőségéhez.
 class Date{
@@ -107,6 +114,9 @@ public:
                nap == rhs.nap;
     }
 
+    /// Megszámolja a szökönapok számát egy @param d dátum előtt.
+    int szokonapokSzama() const;
+
     /// Destruktor
     ~Date() = default;
 };
@@ -124,6 +134,10 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs);
 /// @return istream
 std::istream& operator>>(std::istream& is, Date& rhs);
 
+/// Kivonás két dátumot egymásból
+/// @param
+int operator-(const Date& lhs, const Date& rhs);
+
 /// Szerződés osztály, szerződések tárolására
 class Szerzodes{
     int id; ///A szerződés egyedi azonosítója, szerződészám
@@ -132,9 +146,9 @@ class Szerzodes{
     int ar; /// mennyibe kerül az áram [Ft/kW]
 
 public:
-    Szerzodes() :datum(0, 0, 0), ugyfel("Üres", 0, 0) {};
-    Szerzodes(int, int, int, Ugyfel, int, int);
-    Szerzodes(Date, Ugyfel, int, int);
+    Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, 0), ar(0) {};
+    Szerzodes(int, int, int, const Ugyfel&, int, int);
+    Szerzodes(Date, const Ugyfel&, int, int);
     ///getter függvények:
     int getId() const;
     Date getDate() const;
@@ -146,11 +160,18 @@ public:
     void setDate(const Date& date){this->datum = date;}
     void setUgyfel(const Ugyfel& ugy){this->ugyfel = ugy;}
     void setAr(int ara){ this->ar = ara;}
-
-    virtual ~Szerzodes();
 };
 
 std::ostream& operator<<(std::ostream& os, Szerzodes& rhs);
 std::istream& operator>>(std::istream& is, Szerzodes& rhs);
 
+/// Egyéb függvények:
+
 #endif //NAGYHAZI_MVM_H
+
+/// Számlázás:
+/// Az elszámolásban egy hónap mindig 30 nap, tehát annyi hónap ahányszor 30 nap.
+/// @param szerzodes - A szerződés ami alapján előállítják a számlát
+/// @param meddig - a számlázott időintervallum eleje
+/// @param meddig - a számlázott időintervallum vége
+void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig);

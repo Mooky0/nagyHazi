@@ -15,6 +15,17 @@ int main() {
         Date d1;
         std::cout << d1;
     END
+    TEST(Datumteszt, Kivonas)
+        Date d0(2000, 2, 1);
+        Date d1(2004, 2, 1);
+        int kul0 = d1 - d0;
+        EXPECT_EQ(1461, kul0);
+
+        Date d2(2020, 11, 12);
+        Date d3(2022, 4, 23);
+        int kul1 = d3 - d2;
+        EXPECT_EQ(527, kul1);
+    END
 
 
     TEST(Ugyfel, Konstruktor)
@@ -57,6 +68,17 @@ int main() {
         EXPECT_EQ(u0, sz0.getUgyfel());
         //std::cout << "Még megvan!2" << std::endl;
         EXPECT_EQ(600, sz0.getAr());
+    END
+
+    TEST(Szamlazas, Szamlaz)
+        Ugyfel u0("Szió Mió", 126, 2005, 6);
+        u0.setEgyenleg(1500);
+        Szerzodes sz0(2003, 1, 29, u0, 300, 987);
+        Date d0(2022, 2, 1);
+        Date d1(2021, 10, 5);
+        szamlaz(sz0, d1, d0);
+        //EXPECT_TRUE(gtest_lite::almostEQ(310.0, sz0.getUgyfel().getEgyenleg()));
+        EXPECT_EQ(310.0, sz0.getUgyfel().getEgyenleg());
     END
 
     /*
