@@ -130,6 +130,62 @@ int main() {
         EXPECT_EQ(330.0, u0.getAvgFogyasztas());
         EXPECT_EQ(5, u0.getMiota());
     END
+
+    std::cout << "Lab08-as halmaz tesztek:" << std::endl;
+    TEST(int, insert) {
+            Set<int> s0;
+            s0.insert(1);
+            s0.insert(2);
+            EXPECT_TRUE(s0.isElement(1)) << "== Betettuk, de nincs benne! ==\n";
+            EXPECT_TRUE(s0.isElement(2)) << "== Betettuk, de nincs benne! ==\n";
+            EXPECT_FALSE(s0.isElement(0)) << "== Nem tettuk be, de benne van! ==\n";
+            EXPECT_EQ(2, s0.size()) << "== Nem jo meretet! ***\n";
+            s0.insert(1);
+            EXPECT_EQ(2, s0.size()) << "== Azonos elem utan nem jo a meretet! ==\n";
+        } ENDM
+
+    /// kivétel dobás tesztelése int-re
+    TEST(int, exception) {
+            Set<int, 1> s0;
+            EXPECT_NO_THROW(s0.insert(1));
+            EXPECT_THROW(s0.insert(2), const char*);
+        } ENDM
+
+    /// insert és isElement tesztelése char-ra
+    TEST(char, insert) {
+            Set<char> s0;
+            s0.insert('a');
+            EXPECT_TRUE(s0.isElement('a'));
+            EXPECT_FALSE(s0.isElement('b'));
+        } ENDM
+
+    /// insert és isElement tesztelése Integer-re
+    /*
+    TEST(Integer, insert) {
+            Set<Integer> s0;
+            s0.insert(Integer(1));
+            EXPECT_TRUE(s0.isElement(Integer(1)));
+            EXPECT_FALSE(s0.isElement(Integer(120)));
+        } ENDM
+    */
+
+    /// insert és isElement tesztelése Ugyfél-re, amikor mindkét koordináta számít az összehasonlításban
+    TEST(Ugyfel, insert) {
+            Set<Ugyfel> s0;
+            s0.insert(Ugyfel("Szió Mió", 126, 2005, 6));
+            EXPECT_TRUE(s0.isElement(Ugyfel("Szió Mió", 126, 2005, 6)));
+            EXPECT_FALSE(s0.isElement(Ugyfel("Helloka Belloka", 126, 2005, 6)));
+            EXPECT_FALSE(s0.isElement(Ugyfel("Szió Mió", 126, 1999, 6)));
+        } ENDM
+    /// insert és isElement tesztelése Szerződés-re, amikor mindkét koordináta számít az összehasonlításban
+    TEST(Szerzodes, insert) {
+            Set<Szerzodes> s0;
+            Ugyfel u0("Csá", 123, 2006, 3);
+            s0.insert(Szerzodes(2003, 1, 29, u0, 300, 987));
+            EXPECT_TRUE(s0.isElement(Szerzodes(2003, 1, 29, u0, 300, 987)));
+            EXPECT_FALSE(s0.isElement(Szerzodes(1999, 05, 14, u0, 300, 987)));
+            EXPECT_FALSE(s0.isElement(Szerzodes(2003, 1, 29, u0, 5, 456)));
+        } ENDM
     /*
     TEST(Random, valami)
         std::cout << "Szia!" << std::endl;

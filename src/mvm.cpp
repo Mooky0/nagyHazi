@@ -216,6 +216,13 @@ Date Szerzodes::getDate() const {return datum;}
 Ugyfel& Szerzodes::getUgyfel() const {return (Ugyfel &) ugyfel;}
 int Szerzodes::getAr() const {return ar;}
 
+bool Szerzodes::operator==(const Szerzodes &rhs) const {
+    return id == rhs.id &&
+           datum == rhs.datum &&
+           ugyfel == rhs.ugyfel &&
+           ar == rhs.ar;
+}
+
 std::ostream& operator<<(std::ostream& os, Szerzodes& rhs){
     os << "Szerződés (" << rhs.getId() << ") az MVM és " <<  rhs.getUgyfel() << "\tközött: "
         << rhs.getDate() << " napon " << rhs.getAr() << "Ft/kW-ról." << std::endl;
