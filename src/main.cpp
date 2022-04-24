@@ -11,9 +11,13 @@ int main() {
 
     TEST(Datumteszt, Konstruktor)
         Date d0(2022, 4, 14);
-        ASSERT_NO_THROW(std::cout << d0;)
+        EXPECT_EQ(2022, d0.getEv());
+        EXPECT_EQ(4, d0.getHo());
+        EXPECT_EQ(14, d0.getNap());
         Date d1;
-        std::cout << d1;
+        EXPECT_EQ(0, d1.getEv());
+        EXPECT_EQ(0, d1.getHo());
+        EXPECT_EQ(0, d1.getNap());
     END
     TEST(Datumteszt, Kivonas)
         Date d0(2000, 2, 1);
@@ -25,6 +29,11 @@ int main() {
         Date d3(2022, 4, 23);
         int kul1 = d3 - d2;
         EXPECT_EQ(527, kul1);
+
+        Date d4(2020, 10, 2);
+        Date d5(2022, 4,25);
+        int kul2 = d5 - d4;
+        EXPECT_EQ(570, kul2);
     END
 
 
@@ -33,9 +42,12 @@ int main() {
         Ugyfel u1(u0);
         std::string str = "Hello bello";
         Ugyfel u2(str, 124, 1990, 4);
-        std::cout << u0;
-        std::cout << u1;
-        std::cout << u2;
+        EXPECT_EQ("Jancsi Jóska", u0.getNev());
+        EXPECT_EQ(123, u0.getId());
+        EXPECT_EQ(2022, u0.getSzulEv());
+        EXPECT_EQ(3, u0.getMiota());
+        EXPECT_EQ(Ugyfel("Jancsi Jóska", 123, 2022, 3), u1);
+        EXPECT_EQ(Ugyfel("Hello bello", 124, 1990, 4), u2);
     END
     TEST(Ugyfel, Input)
         Ugyfel u2/*("Helloka Belloka", 120, 2000, 15)*/;
@@ -47,10 +59,32 @@ int main() {
         EXPECT_EQ(15, u2.getMiota());
     END
 
+    TEST(Ugyfel, befizet)
+        /// Befizetés globális fv-vel
+        Ugyfel u2("Helloka Belloka", 120, 2000, 15);
+        u2.setEgyenleg(1500);
+        befizet(u2, 300);
+        EXPECT_EQ(1800, u2.getEgyenleg());
+
+        /// Befizetés tagfv-vel
+        u2.befizet(200);
+        EXPECT_EQ(2000, u2.getEgyenleg());
+    END
+
     TEST(Szerzodes, Konstruktor)
         Ugyfel u0("Enci Penci2", 124, 2013, 6);
         Szerzodes sz0(2003, 1, 29, u0, 300, 987);
-        std::cout << sz0;
+        EXPECT_EQ(Date(2003, 1, 29), sz0.getDate());
+        EXPECT_EQ(Ugyfel("Enci Penci2", 124, 2013, 6), sz0.getUgyfel());
+        EXPECT_EQ(300, sz0.getAr());
+        EXPECT_EQ(987, sz0.getId());
+
+        Date d0(2000, 8, 6);
+        Szerzodes sz1(d0, u0, 500, 654);
+        EXPECT_EQ(Date(2000, 8, 6), sz1.getDate());
+        EXPECT_EQ(Ugyfel("Enci Penci2", 124, 2013, 6), sz1.getUgyfel());
+        EXPECT_EQ(500, sz1.getAr());
+        EXPECT_EQ(654, sz1.getId());
     END
     TEST(Szerzodes, Input)
         Szerzodes sz0;
@@ -81,6 +115,12 @@ int main() {
         EXPECT_EQ(310.0, sz0.getUgyfel().getEgyenleg());
     END
 
+
+    TEST(Ugyfel, fogyasztas)
+        Ugyfel u0;
+        u0.fogyasztasBejelent(300);
+        std::cout << "Nem tudom mit kéne csinálni" << std::endl;
+    END
     /*
     TEST(Random, valami)
         std::cout << "Szia!" << std::endl;

@@ -51,6 +51,13 @@ public:
     ///Az egyenlegből @param osszeg levonása
     void egyenlegLevon(double osszeg);
 
+    /// Ügyfélnek számla befizetése
+    void befizet(double osszeg);
+
+    /// Fogyasztás bejelentése
+    ///
+    void fogyasztasBejelent(double mennyi);
+
     /// Egyenlőség viusgáló operátor a egyenleget és a fogyasztást nem viszgálja
     bool operator==(const Ugyfel &rhs) const;
     bool operator==(Ugyfel* rhs) const;
@@ -92,10 +99,10 @@ public:
         this->ho = rhs.ho;
         this->nap = rhs.nap;
     }
-    /// Setter függvények:
-    void setEv(int ev);
-    void setHo(int ho);
-    void setNap(int nap);
+    /// Setter függvények: (mivel nem használuk őket ki vannak kommentelve)
+//    void setEv(int ev);
+//    void setHo(int ho);
+//    void setNap(int nap);
 
     /// Getter függvények
     int getEv() const;
@@ -147,7 +154,7 @@ class Szerzodes{
 
 public:
     Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, 0), ar(0) {};
-    Szerzodes(int, int, int, const Ugyfel&, int, int);
+    Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar, int az);
     Szerzodes(Date, const Ugyfel&, int, int);
     ///getter függvények:
     int getId() const;
@@ -175,3 +182,10 @@ std::istream& operator>>(std::istream& is, Szerzodes& rhs);
 /// @param meddig - a számlázott időintervallum eleje
 /// @param meddig - a számlázott időintervallum vége
 void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig);
+
+/// Befizetés:
+/// Ugyfél szolgáltalási díjának befizetése
+/// @param ugyfel - melyik ügyfélnek
+/// @param osszeg - mennyit
+void befizet(Ugyfel& ugyfel, double osszeg);
+

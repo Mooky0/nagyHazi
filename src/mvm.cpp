@@ -100,6 +100,14 @@ void Ugyfel::egyenlegLevon(double osszeg) {
     egyenleg -= osszeg;
 }
 
+void Ugyfel::befizet(double osszeg) {
+    egyenleg += osszeg;
+}
+
+void Ugyfel::fogyasztasBejelent(double mennyi) {
+    std::cout<<"Még nem tudom ez mit csinál" << mennyi << std::endl;
+}
+
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
     return nev == rhs.nev &&
            id == rhs.id &&
@@ -120,9 +128,9 @@ int Date::getEv() const {return ev;}
 int Date::getHo() const {return ho;}
 int Date::getNap() const {return nap;}
 /// Setterek:
-void Date::setEv(int e) {Date::ev = e;}
-void Date::setHo(int h) {Date::ho = h;}
-void Date::setNap(int n) {Date::nap = n;}
+//void Date::setEv(int e) {Date::ev = e;}
+//void Date::setHo(int h) {Date::ho = h;}
+//void Date::setNap(int n) {Date::nap = n;}
 
 int Date::szokonapokSzama() const {
     int evek = this->ev;
@@ -210,5 +218,11 @@ void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig) {
     szerzodes.getUgyfel().Ugyfel::egyenlegLevon(fizetendo);
     Pr(szerzodes);
 }
+
+void befizet(Ugyfel &ugyfel, double osszeg) {
+    ugyfel.setEgyenleg(ugyfel.getEgyenleg() + osszeg);
+}
+
+
 
 
