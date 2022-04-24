@@ -20,14 +20,20 @@ std::istream& operator>>(std::istream& is, std::string str){
 */
 
 /// Ügyfél osztály:
+Ugyfel::Ugyfel() : id(0), szulEv(0), miota(0), egyenleg(0), meret(0) {
+    fogyasztas = new double[miota];
+    Pr("Ugyfél 0param ctor");
+    //fogyasztas[miota] = 0.0;
+}
+
 Ugyfel::Ugyfel(std::string nev, int az, int ev, int kezdes = 0)
-        : nev(std::move(nev)), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180){
+        : nev(std::move(nev)), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
     Pr("Ugyfél string ctor: " << this->nev);
     fogyasztas = new double[miota];
 }
 
 Ugyfel::Ugyfel(const char *nev, int az, int ev, int kezdes)
-        : nev(nev), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180){
+        : nev(nev), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
         /// Ebben vannak magis numberek, azokat majd mindenképpen javítani kell, mert ez most így úgy szar ahogy van.
         /// init lista végén a a egyenleg(miota * 180) az mi a fasz...?
         Pr("Ugyfél ctor: Méret: " << kezdes << " Név: " << this->nev);
@@ -40,6 +46,7 @@ Ugyfel::Ugyfel( const Ugyfel& rhs){
     this->szulEv = rhs.szulEv;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
+    this->meret = rhs.meret;
     this->fogyasztas = new double[this->miota];
     for(int i=0; i < rhs.miota; i++){
         this->fogyasztas[i] = rhs.fogyasztas[i];
@@ -54,6 +61,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
     this->szulEv = rhs.szulEv;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
+    this->meret = rhs.meret;
     delete[] fogyasztas;
     this->fogyasztas = new double[this->miota];
     for(int i=0; i < rhs.miota; i++){
@@ -94,7 +102,14 @@ std::string Ugyfel::getNev() const {return nev;}
 int Ugyfel::getId() const {return id;}
 int Ugyfel::getSzulEv() const {return szulEv;}
 int Ugyfel::getMiota() const {return miota;}
+int Ugyfel::getMeret() const {return meret;}
 double Ugyfel::getEgyenleg() const {return egyenleg;}
+double Ugyfel::getAvgFogyasztas() const {
+    double sum = 0;
+    for(size_t i = 0; i < meret; i++)
+        sum += fogyasztas[i];
+    return (sum / meret);
+}
 
 void Ugyfel::egyenlegLevon(double osszeg) {
     egyenleg -= osszeg;
@@ -105,7 +120,19 @@ void Ugyfel::befizet(double osszeg) {
 }
 
 void Ugyfel::fogyasztasBejelent(double mennyi) {
-    std::cout<<"Még nem tudom ez mit csinál" << mennyi << std::endl;
+    Pr("Még nem tudom ez mit csinál " << mennyi);
+    auto *tmp = new double [meret];
+    for (size_t i=0; i < meret; i++)
+        tmp[i] = fogyasztas[i];
+    delete [] fogyasztas;
+    fogyasztas = new double [meret+1];
+    for (size_t i =0; i < meret; i++) {
+        fogyasztas[i] = tmp[i];
+        Pr(i << ": " << fogyasztas[i] << "");
+    }
+    delete [] tmp;
+    Pr("új: " << mennyi << std::endl);
+    fogyasztas[meret++] = mennyi;
 }
 
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
@@ -179,7 +206,7 @@ Szerzodes::Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar = 300, i
     Pr(this->datum);
 }
 
-Szerzodes::Szerzodes(Date date, const Ugyfel& kicsoda, int ar = 300, int az = 987)
+Szerzodes::Szerzodes(const Date& date, const Ugyfel& kicsoda, int ar = 300, int az = 987)
     : id(az), datum(date), ugyfel(kicsoda), ar(ar) {
     Pr("Szerződés ctor: " << this->datum);
 }

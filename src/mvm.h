@@ -25,11 +25,12 @@ class Ugyfel{
     std::string nev; /// az ügyfél neve.
     int id; /// Az adott ügyfél személyes azonosítója, minden ügyfélnek különböző.
     int szulEv; /// Az ügyfél születési éve
-    int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott. A fogyasztás tömb mérete.
+    int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott.
     double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
+    size_t meret; /// A fogyasztás tömb mérete, általában megegyezik a miota-val (hány hónapja ügyfél az ügfyél)
     double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
 public:
-    Ugyfel() {miota = 0; fogyasztas = new double[miota]; Pr("Ugyfél 0param ctor")};
+    Ugyfel();
     Ugyfel(std::string nev, int az, int ev, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const char * nev, int az, int ev, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const Ugyfel& rhs);
@@ -39,13 +40,15 @@ public:
     int getId() const;
     int getSzulEv() const;
     int getMiota() const;
+    int getMeret() const;
     double getEgyenleg() const;
+    double getAvgFogyasztas() const;
 
     /// Setter függvények:
     void setNev(std::string n) {this->nev = std::move(n);}
     void setId(int az){this->id = az;}
     void setSzulEv(int szul){this->szulEv = szul;}
-    void setMiota(int kezdes){this->miota = kezdes; delete [] fogyasztas; fogyasztas = new double[miota];}
+    void setMiota(int kezdes){this->miota = kezdes;}
     void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
 
     ///Az egyenlegből @param osszeg levonása
@@ -72,11 +75,14 @@ public:
     }
 };
 /// Outsream operator
-/// @param os - oustream;
+/// @param os - ostream;
 /// @param rhs - kiiírandó Ügyfél
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
 // std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
 
+/// Insream operator
+/// @param is - istream;
+/// @param rhs - beolvasandó Ügyfél
 std::istream& operator>>(std::istream& is, Ugyfel& rhs);
 
 /// Hónapokban a napok számának tárolására
@@ -155,7 +161,7 @@ class Szerzodes{
 public:
     Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, 0), ar(0) {};
     Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar, int az);
-    Szerzodes(Date, const Ugyfel&, int, int);
+    Szerzodes(const Date&, const Ugyfel&, int, int);
     ///getter függvények:
     int getId() const;
     Date getDate() const;
@@ -169,12 +175,11 @@ public:
     void setAr(int ara){ this->ar = ara;}
 };
 
-std::ostream& operator<<(std::ostream& os, Szerzodes& rhs);
+std::ostream& operator<<(std::ostream& os, const Szerzodes& rhs);
 std::istream& operator>>(std::istream& is, Szerzodes& rhs);
 
 /// Egyéb függvények:
 
-#endif //NAGYHAZI_MVM_H
 
 /// Számlázás:
 /// Az elszámolásban egy hónap mindig 30 nap, tehát annyi hónap ahányszor 30 nap.
@@ -188,4 +193,6 @@ void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig);
 /// @param ugyfel - melyik ügyfélnek
 /// @param osszeg - mennyit
 void befizet(Ugyfel& ugyfel, double osszeg);
+
+#endif //NAGYHAZI_MVM_H
 

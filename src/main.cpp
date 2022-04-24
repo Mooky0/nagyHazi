@@ -117,9 +117,18 @@ int main() {
 
 
     TEST(Ugyfel, fogyasztas)
+        Pr("Nem tudom mit kéne csinálni");
         Ugyfel u0;
+        u0.setMiota(1);
         u0.fogyasztasBejelent(300);
-        std::cout << "Nem tudom mit kéne csinálni" << std::endl;
+        EXPECT_EQ(300.0, u0.getAvgFogyasztas());
+        u0.setMiota(5);
+        u0.fogyasztasBejelent(400);
+        u0.fogyasztasBejelent(200);
+        u0.fogyasztasBejelent(500);
+        u0.fogyasztasBejelent(250);
+        EXPECT_EQ(330.0, u0.getAvgFogyasztas());
+        EXPECT_EQ(5, u0.getMiota());
     END
     /*
     TEST(Random, valami)
