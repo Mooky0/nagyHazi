@@ -19,73 +19,7 @@
 # define Pr(...)
 #endif
 
-/// Ügyfél osztály.
-///
-class Ugyfel{
-    std::string nev; /// az ügyfél neve.
-    int id; /// Az adott ügyfél személyes azonosítója, minden ügyfélnek különböző.
-    int szulEv; /// Az ügyfél születési éve
-    int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott.
-    double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
-    size_t meret; /// A fogyasztás tömb mérete, általában megegyezik a miota-val (hány hónapja ügyfél az ügfyél)
-    double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
-public:
-    Ugyfel();
-    Ugyfel(std::string nev, int az, int ev, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
-    Ugyfel(const char * nev, int az, int ev, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
-    Ugyfel(const Ugyfel& rhs);
-
-    /// getter függvények:
-    std::string getNev() const;
-    int getId() const;
-    int getSzulEv() const;
-    int getMiota() const;
-    int getMeret() const;
-    double getEgyenleg() const;
-    double getAvgFogyasztas() const;
-
-    /// Setter függvények:
-    void setNev(std::string n) {this->nev = std::move(n);}
-    void setId(int az){this->id = az;}
-    void setSzulEv(int szul){this->szulEv = szul;}
-    void setMiota(int kezdes){this->miota = kezdes;}
-    void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
-
-    ///Az egyenlegből @param osszeg levonása
-    void egyenlegLevon(double osszeg);
-
-    /// Ügyfélnek számla befizetése
-    void befizet(double osszeg);
-
-    /// Fogyasztás bejelentése
-    ///
-    void fogyasztasBejelent(double mennyi);
-
-    /// Egyenlőség viusgáló operátor a egyenleget és a fogyasztást nem viszgálja
-    bool operator==(const Ugyfel &rhs) const;
-    bool operator==(Ugyfel* rhs) const;
-
-    Ugyfel& operator=(const Ugyfel& rhs);
-    // const Ugyfel operator(const Ugyfel)(Ugyfel rhs){}
-
-    /// dtor csak felszabít
-    virtual ~Ugyfel(){
-        Pr("Ugyfél dtor: " <<  this->nev);
-        delete [] fogyasztas;
-    }
-};
-/// Outsream operator
-/// @param os - ostream;
-/// @param rhs - kiiírandó Ügyfél
-std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
-// std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
-
-/// Insream operator
-/// @param is - istream;
-/// @param rhs - beolvasandó Ügyfél
-std::istream& operator>>(std::istream& is, Ugyfel& rhs);
-
-///======================= Dátum osztály =======================///
+/// ======================= Dátum osztály ======================= ///
 
 /// Hónapokban a napok számának tárolására
 const int honapNapjai[12] = { 31, 28, 31, 30, 31, 30,
@@ -132,6 +66,10 @@ public:
     /// Megszámolja a szökönapok számát egy @param d dátum előtt.
     int szokonapokSzama() const;
 
+    /// Kivonás két dátumot egymásból
+    /// @param
+    int operator-(const Date& rhs) const;
+
     /// Destruktor
     ~Date() = default;
 };
@@ -149,9 +87,72 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs);
 /// @return istream
 std::istream& operator>>(std::istream& is, Date& rhs);
 
-/// Kivonás két dátumot egymásból
-/// @param
-int operator-(const Date& lhs, const Date& rhs);
+
+/// =========================== Ugyfél osztály ================================= ///
+class Ugyfel{
+    std::string nev; /// az ügyfél neve.
+    int id; /// Az adott ügyfél személyes azonosítója, minden ügyfélnek különböző.
+    Date szul; /// Az ügyfél születési dátum
+    int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott.
+    double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
+    size_t meret; /// A fogyasztás tömb mérete, általában megegyezik a miota-val (hány hónapja ügyfél az ügfyél)
+    double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
+public:
+    Ugyfel();
+    Ugyfel(std::string nev, int az, const Date& date, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
+    Ugyfel(const char * nev, int az, const Date& date, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
+    Ugyfel(const Ugyfel& rhs);
+
+    /// getter függvények:
+    std::string getNev() const;
+    int getId() const;
+    Date getSzul() const;
+    int getMiota() const;
+    int getMeret() const;
+    double getEgyenleg() const;
+    double getAvgFogyasztas() const;
+
+    /// Setter függvények:
+    void setNev(std::string n) {this->nev = std::move(n);}
+    void setId(int az){this->id = az;}
+    void setSzulEv(Date szul){this->szul = szul;}
+    void setMiota(int kezdes){this->miota = kezdes;}
+    void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
+
+    ///Az egyenlegből @param osszeg levonása
+    void egyenlegLevon(double osszeg);
+
+    /// Ügyfélnek számla befizetése
+    void befizet(double osszeg);
+
+    /// Fogyasztás bejelentése
+    ///
+    void fogyasztasBejelent(double mennyi);
+
+    /// Egyenlőség viusgáló operátor a egyenleget és a fogyasztást nem viszgálja
+    bool operator==(const Ugyfel &rhs) const;
+    bool operator==(Ugyfel* rhs) const;
+
+    Ugyfel& operator=(const Ugyfel& rhs);
+    // const Ugyfel operator(const Ugyfel)(Ugyfel rhs){}
+
+    /// dtor csak felszabít
+    virtual ~Ugyfel(){
+        Pr("Ugyfél dtor: " <<  this->nev);
+        delete [] fogyasztas;
+    }
+};
+/// Outsream operator
+/// @param os - ostream;
+/// @param rhs - kiiírandó Ügyfél
+std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
+// std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
+
+/// Insream operator
+/// @param is - istream;
+/// @param rhs - beolvasandó Ügyfél
+std::istream& operator>>(std::istream& is, Ugyfel& rhs);
+
 
 ///======================= Szerződés osztály =======================///
 
@@ -163,7 +164,7 @@ class Szerzodes{
     int ar; /// mennyibe kerül az áram [Ft/kW]
 
 public:
-    Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, 0), ar(0) {};
+    Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, Date(0, 0, 0)), ar(0) {};
     Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar, int az);
     Szerzodes(const Date&, const Ugyfel&, int, int);
     ///getter függvények:

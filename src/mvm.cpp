@@ -20,20 +20,20 @@ std::istream& operator>>(std::istream& is, std::string str){
 */
 
 /// Ügyfél osztály:
-Ugyfel::Ugyfel() : id(0), szulEv(0), miota(0), egyenleg(0), meret(0) {
+Ugyfel::Ugyfel() : id(0), szul(0, 0, 0), miota(0), egyenleg(0), meret(0) {
     fogyasztas = new double[miota];
     Pr("Ugyfél 0param ctor");
     //fogyasztas[miota] = 0.0;
 }
 
-Ugyfel::Ugyfel(std::string nev, int az, int ev, int kezdes = 0)
-        : nev(std::move(nev)), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
+Ugyfel::Ugyfel(std::string nev, int az, const Date& date, int kezdes = 0)
+        : nev(std::move(nev)), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
     Pr("Ugyfél string ctor: " << this->nev);
     fogyasztas = new double[miota];
 }
 
-Ugyfel::Ugyfel(const char *nev, int az, int ev, int kezdes)
-        : nev(nev), id(az), szulEv(ev), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
+Ugyfel::Ugyfel(const char *nev, int az, const Date& date, int kezdes)
+        : nev(nev), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
         /// Ebben vannak magis numberek, azokat majd mindenképpen javítani kell, mert ez most így úgy szar ahogy van.
         /// init lista végén a a egyenleg(miota * 180) az mi a fasz...?
         Pr("Ugyfél ctor: Méret: " << kezdes << " Név: " << this->nev);
@@ -43,7 +43,7 @@ Ugyfel::Ugyfel(const char *nev, int az, int ev, int kezdes)
 Ugyfel::Ugyfel( const Ugyfel& rhs){
     this->nev = rhs.nev;
     this->id = rhs.id;
-    this->szulEv = rhs.szulEv;
+    this->szul = rhs.szul;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
     this->meret = rhs.meret;
@@ -58,7 +58,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
         return *this;
     this->nev = rhs.nev;
     this->id = rhs.id;
-    this->szulEv = rhs.szulEv;
+    this->szul = rhs.szul;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
     this->meret = rhs.meret;
@@ -76,7 +76,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
 //    return os;
 //}
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
-    os << rhs.getNev() << "(" << rhs.getId()  << ") született: " << rhs.getSzulEv()
+    os << rhs.getNev() << "(" << rhs.getId()  << ") született: " << rhs.getSzul()
         << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
         << rhs.getMiota() << " hónapja." << std::endl;
     return os;
@@ -85,7 +85,7 @@ std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
 std::istream& operator>>(std::istream& is, Ugyfel& rhs){
     std::string neve;
     int id;
-    int szul;
+    Date szul;
     int mikor;
     std::getline(is, neve);
     is >> id >> szul >> mikor;
@@ -100,7 +100,7 @@ std::istream& operator>>(std::istream& is, Ugyfel& rhs){
 
 std::string Ugyfel::getNev() const {return nev;}
 int Ugyfel::getId() const {return id;}
-int Ugyfel::getSzulEv() const {return szulEv;}
+Date Ugyfel::getSzul() const {return szul;}
 int Ugyfel::getMiota() const {return miota;}
 int Ugyfel::getMeret() const {return meret;}
 double Ugyfel::getEgyenleg() const {return egyenleg;}
@@ -138,14 +138,14 @@ void Ugyfel::fogyasztasBejelent(double mennyi) {
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
     return nev == rhs.nev &&
            id == rhs.id &&
-           szulEv == rhs.szulEv &&
+           szul == rhs.szul &&
            miota == rhs.miota;
 }
 
 bool Ugyfel::operator==(Ugyfel *rhs) const {
     return nev == rhs->nev &&
            id == rhs->id &&
-           szulEv == rhs->szulEv &&
+           szul == rhs->szul &&
            miota == rhs->miota;
 }
 
@@ -184,12 +184,12 @@ std::istream& operator>>(std::istream& is, Date& rhs){
     return is;
 }
 /// kivonás operátor
-int operator-(const Date &lhs, const Date &rhs) {
+int Date::operator-(const Date &rhs) const {
     ///Első dátum előtt eltelt napok száma:
-    long int n1 = lhs.getEv() * 365 + lhs.getNap();
-    for (int i= 0; i<lhs.getHo()-1; i++)
+    long int n1 = this->getEv() * 365 + this->getNap();
+    for (int i= 0; i<this->getHo()-1; i++)
         n1 += honapNapjai[i];
-    n1 += lhs.szokonapokSzama();
+    n1 += this->szokonapokSzama();
 
     /// Második dátum előtt eltelt napok száma
     long int n2 = rhs.getEv() * 365 + rhs.getNap();
