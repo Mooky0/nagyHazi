@@ -186,6 +186,7 @@ std::ostream& operator<<(std::ostream& os, const Szerzodes& rhs);
 std::istream& operator>>(std::istream& is, Szerzodes& rhs);
 
 ///======================= Tároló osztály =======================///
+/// Ez az osztály a 8. labor megoldásom, kisebb módosításokkal.
 template<class T, int max = 10>
 class Set{
     T *adat;    /// Adat tömb amit tárolunk
