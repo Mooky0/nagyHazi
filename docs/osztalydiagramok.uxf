@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>96</x>
+      <y>246</y>
+      <w>186</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>Ugyfel
+--
+-nev: String
+-miota: int
+-egyenleg: double
+-meret: size_t
+-fogyasztas: double*
+--
++Ugyfel()
++Ugyfel(string, int, Date, int)
++Ugyfel(const char *, int, Date, int)
++Ugyfel(const Ugyfel&amp;)
+
++getNev(): string
++getMiota(): int
++getMeret(): int
++getEgyenleg(): double
++getAvgFogyasztas(): double
+
++setNev(string): void
++setMiota(int): void
++setEgyenleg(double): void
+
++egyenlegLevon(double): void
++befizet(double): void
++fogyasztasBejelent(double): void
+
++operator==(Ugyfel* rhs): bool
++operator=(Ugyfel&amp;): Ugyfel&amp;
++~Ugyfel(): virtual</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>90</x>
+      <y>90</y>
+      <w>126</w>
+      <h>114</h>
+    </coordinates>
+    <panel_attributes>Date
+--
+-ev: int
+-ho: int
+-nap: int
+--
++Date(int, int, int): explicit
++Date(const Date&amp;)
+
++getEv(): int
++getHo(): int
++getNap(): int
+
++operator==(Date &amp;): bool
++szokonapokSzama(): int
++operator-(const Date&amp;): int
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>534</x>
+      <y>270</y>
+      <w>186</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>Szerződés
+--
++ugyfel: Ugyfel
++ar: ar
+--
++Szerzodes()
++Szerzodes(int, int, int, Ugyfel&amp;, int, int)
++Szerzodes(Date&amp;, Ugyfel&amp;, int, int)
+
++getUgyfel(): Ugyfel&amp;
++getAr(): int
+
++setUgyfel(Ugyfel&amp;): void
++setAr(int): void
+
++operator==(Szerzodes &amp;): bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>348</x>
+      <y>264</y>
+      <w>126</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>Set
+--
+T: Adat Típusú Osztály
+--
+-adat: T*
+-n: int
+--
++Set(int): explicit
+
++size(): int
++isElement(T): bool
++insert(T): void
+
++~Set()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>372</x>
+      <y>84</y>
+      <w>126</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>Base
+--
+-id: int
+-datum: Date
+--
++Base(int, Date)
++Base(int, int, int, int)
+
++getId(): int
++getDate(): Date
+
++setId(int): void
++setSzul(Date&amp;): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>228</x>
+      <y>204</y>
+      <w>180</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>450</x>
+      <y>204</y>
+      <w>198</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;310.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>108</y>
+      <w>174</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>270.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>276</x>
+      <y>294</y>
+      <w>84</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+bg=black</panel_attributes>
+    <additional_attributes>120.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>468</x>
+      <y>294</y>
+      <w>78</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+bg=black</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+</diagram>
