@@ -1,6 +1,7 @@
 #include <iostream>
 
 //#define DEBUG
+    #include "string5.h"
 #include "mvm.h"
 //#define MEMTRACE
 #include "gtest_lite.h"
@@ -40,9 +41,9 @@ int main() {
     TEST(Ugyfel, Konstruktor)
         Ugyfel u0("Jancsi Jóska", 123, Date(2022), 3);
         Ugyfel u1(u0);
-        std::string str = "Hello bello";
+        String str("Hello bello");
         Ugyfel u2(str, 124, Date(1990), 4);
-        EXPECT_EQ("Jancsi Jóska", u0.getNev());
+        EXPECT_STREQ("Jancsi Jóska", u0.getNevChar());
         EXPECT_EQ(123, u0.getId());
         EXPECT_EQ(Date(2022), u0.getSzul());
         EXPECT_EQ(3, u0.getMiota());
@@ -53,7 +54,7 @@ int main() {
         Ugyfel u2/*("Helloka Belloka", 120, 2000, 15)*/;
         std::istringstream iss("Helloka Belloka\n120 2000 0 0 15");
         iss >> u2;
-        EXPECT_EQ("Helloka Belloka", u2.getNev());
+        EXPECT_STREQ("Helloka Belloka", u2.getNevChar());
         EXPECT_EQ(120, u2.getId());
         EXPECT_EQ(Date(2000), u2.getSzul());
         EXPECT_EQ(15, u2.getMiota());
@@ -88,7 +89,7 @@ int main() {
     END
     TEST(Szerzodes, Input)
         Szerzodes sz0;
-        std::istringstream iss("45 1970 01 01Random Ugyfél\n666 1600 0 0 3 600");
+        std::istringstream iss("45 1970 01 01Random Ugyfél\n666 1600 0 0 3 600"); /// Sz.id, Sz.Dátum, U.nev, U.az, U.szulDátum, U.miotam, Sz.ar
         Pr("tudod hol kell keresni ;)");
         iss >> sz0;
         Pr("Itt is jó");
@@ -131,7 +132,8 @@ int main() {
         EXPECT_EQ(5, u0.getMiota());
     END
 
-    std::cout << "Lab08-as halmaz tesztek:" << std::endl;
+    Pr("Lab08-as halmaz tesztek:");
+    /// Ezek a 8-adik laborból a halmazok tesztjei
     TEST(int, insert) {
             Set<int> s0;
             s0.insert(1);

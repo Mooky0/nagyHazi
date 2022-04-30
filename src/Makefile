@@ -4,9 +4,9 @@
 PROG = main
 
 
-PROG_O = $(PROG).o mvm.o
+PROG_O = $(PROG).o mvm.o string5.o
 
-PROG_H = mvm.h #
+PROG_H = mvm.h string5.h #
 
 PROG_L =              # program libjei
 MTRACE_O = memtrace.o # memtrace object fajl

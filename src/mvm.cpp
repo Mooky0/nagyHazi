@@ -7,6 +7,7 @@
 #include "mvm.h"
 
 #include <utility>
+#include <cstring>
 
 /// random global operatorok amik később lehet nem is kellenek, de nem tudok rendesen jó programot írni <3
 /*
@@ -26,8 +27,8 @@ Ugyfel::Ugyfel() : id(0), szul(0, 0, 0), miota(0), egyenleg(0), meret(0) {
     //fogyasztas[miota] = 0.0;
 }
 
-Ugyfel::Ugyfel(std::string nev, int az, const Date& date, int kezdes = 0)
-        : nev(std::move(nev)), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
+Ugyfel::Ugyfel(const String& nev, int az, const Date& date, int kezdes = 0)
+        : nev(String(nev)), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
     Pr("Ugyfél string ctor: " << this->nev);
     fogyasztas = new double[miota];
 }
@@ -76,18 +77,18 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
 //    return os;
 //}
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
-    os << rhs.getNev() << "(" << rhs.getId()  << ") született: " << rhs.getSzul()
+    os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getSzul()
         << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
         << rhs.getMiota() << " hónapja." << std::endl;
     return os;
 }
 
 std::istream& operator>>(std::istream& is, Ugyfel& rhs){
-    std::string neve;
+    String neve;
     int id;
     Date szul;
     int mikor;
-    std::getline(is, neve);
+    is >> neve;
     is >> id >> szul >> mikor;
 
     rhs.setNev(neve);
@@ -98,7 +99,8 @@ std::istream& operator>>(std::istream& is, Ugyfel& rhs){
     return is;
 }
 
-std::string Ugyfel::getNev() const {return nev;}
+const char* Ugyfel::getNevChar() const {return nev.c_str();}
+String Ugyfel::getNevStr() const {return nev;}
 int Ugyfel::getId() const {return id;}
 Date Ugyfel::getSzul() const {return szul;}
 int Ugyfel::getMiota() const {return miota;}
@@ -108,7 +110,7 @@ double Ugyfel::getAvgFogyasztas() const {
     double sum = 0;
     for(size_t i = 0; i < meret; i++)
         sum += fogyasztas[i];
-    return (sum / meret);
+    return (sum / miota);
 }
 
 void Ugyfel::egyenlegLevon(double osszeg) {
@@ -136,14 +138,14 @@ void Ugyfel::fogyasztasBejelent(double mennyi) {
 }
 
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
-    return nev == rhs.nev &&
+    return nev == rhs.getNevStr() &&
            id == rhs.id &&
            szul == rhs.szul &&
            miota == rhs.miota;
 }
 
 bool Ugyfel::operator==(Ugyfel *rhs) const {
-    return nev == rhs->nev &&
+    return nev == rhs->getNevStr() &&
            id == rhs->id &&
            szul == rhs->szul &&
            miota == rhs->miota;
@@ -235,6 +237,7 @@ std::istream& operator>>(std::istream& is, Szerzodes& rhs){
     Ugyfel ugyfel;
     int ar;
     is >> az >> datum >> ugyfel >> ar;
+    Pr(ugyfel);
     rhs.setAr(ar);
     rhs.setId(az);
     rhs.setUgyfel(ugyfel);

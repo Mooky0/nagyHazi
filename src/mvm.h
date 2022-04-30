@@ -7,9 +7,9 @@
 
 #include <iostream>
 #include <iomanip>
-#include <string>
+//#include <string>
+#include "string5.h"
 #include <utility>
-//#include <utility>
 
 /// Debuggoláshoz kiíró makró a negyedik laborról (https://infocpp.iit.bme.hu/labor/04)
 //#define DEBUG
@@ -90,7 +90,7 @@ std::istream& operator>>(std::istream& is, Date& rhs);
 
 /// =========================== Ugyfél osztály ================================= ///
 class Ugyfel{
-    std::string nev; /// az ügyfél neve.
+    String nev; /// az ügyfél neve.
     int id; /// Az adott ügyfél személyes azonosítója, minden ügyfélnek különböző.
     Date szul; /// Az ügyfél születési dátum
     int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott.
@@ -99,12 +99,13 @@ class Ugyfel{
     double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
 public:
     Ugyfel();
-    Ugyfel(std::string nev, int az, const Date& date, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
+    Ugyfel(const String& nev, int az, const Date& date, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const char * nev, int az, const Date& date, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const Ugyfel& rhs);
 
     /// getter függvények:
-    std::string getNev() const;
+    const char * getNevChar() const;
+    String getNevStr() const;
     int getId() const;
     Date getSzul() const;
     int getMiota() const;
@@ -113,9 +114,9 @@ public:
     double getAvgFogyasztas() const;
 
     /// Setter függvények:
-    void setNev(std::string n) {this->nev = std::move(n);}
+    void setNev(const String& n) {this->nev = String(n);}
     void setId(int az){this->id = az;}
-    void setSzulEv(Date szul){this->szul = szul;}
+    void setSzulEv(const Date& szulDate){this->szul = szulDate;}
     void setMiota(int kezdes){this->miota = kezdes;}
     void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
 
