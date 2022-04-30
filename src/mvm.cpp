@@ -9,42 +9,42 @@
 #include <utility>
 #include <cstring>
 
-/// random global operatorok amik később lehet nem is kellenek, de nem tudok rendesen jó programot írni <3
-/*
-std::istream& operator>>(std::istream& is, std::string str){
-    char c;
-    while (is >> c){
-        str.append(&c);
-    }
-    return is;
-}
-*/
+/// =========================== Base osztály =================================== ///
+Base::Base() : id(0), date(0) {}
+Base::Base(int az, Date datum) :id(az), date(datum) {}
+Base::Base(int az, int e , int h , int n) :id(az), date(e, h, n) {}
 
-/// Ügyfél osztály:
-Ugyfel::Ugyfel() : id(0), szul(0, 0, 0), miota(0), egyenleg(0), meret(0) {
+int Base::getId() const {return  id;}
+Date Base::getDate() const {return date;}
+
+void Base::setDate(const Date &datum) {date = datum;}
+void Base::setId(const int az) {id = az;}
+
+/// =========================== Ugyfél osztály ================================= ///
+Ugyfel::Ugyfel() : Base(), miota(0), egyenleg(0), meret(0) {
     fogyasztas = new double[miota];
     Pr("Ugyfél 0param ctor");
     //fogyasztas[miota] = 0.0;
 }
 
 Ugyfel::Ugyfel(const String& nev, int az, const Date& date, int kezdes = 0)
-        : nev(String(nev)), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
+        : Base(az, date), nev(String(nev)), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
     Pr("Ugyfél string ctor: " << this->nev);
     fogyasztas = new double[miota];
 }
 
 Ugyfel::Ugyfel(const char *nev, int az, const Date& date, int kezdes)
-        : nev(nev), id(az), szul(date), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
+        : Base(az, date), nev(nev), miota(kezdes), egyenleg(miota * 180), meret((size_t)kezdes){
         /// Ebben vannak magis numberek, azokat majd mindenképpen javítani kell, mert ez most így úgy szar ahogy van.
         /// init lista végén a a egyenleg(miota * 180) az mi a fasz...?
         Pr("Ugyfél ctor: Méret: " << kezdes << " Név: " << this->nev);
         fogyasztas = new double[kezdes];
 }
 
-Ugyfel::Ugyfel( const Ugyfel& rhs){
+Ugyfel::Ugyfel( const Ugyfel& rhs) : Base(rhs) {
     this->nev = rhs.nev;
     this->id = rhs.id;
-    this->szul = rhs.szul;
+    this->date = rhs.date;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
     this->meret = rhs.meret;
@@ -59,7 +59,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
         return *this;
     this->nev = rhs.nev;
     this->id = rhs.id;
-    this->szul = rhs.szul;
+    this->date = rhs.date;
     this->egyenleg = rhs.egyenleg;
     this->miota = rhs.miota;
     this->meret = rhs.meret;
@@ -77,7 +77,7 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
 //    return os;
 //}
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
-    os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getSzul()
+    os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getDate()
         << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
         << rhs.getMiota() << " hónapja." << std::endl;
     return os;
@@ -94,15 +94,15 @@ std::istream& operator>>(std::istream& is, Ugyfel& rhs){
     rhs.setNev(neve);
     rhs.setId(id);
     rhs.setMiota(mikor);
-    rhs.setSzulEv(szul);
+    rhs.setDate(szul);
     // rhs = Ugyfel(neve, id, szul, mikor);
     return is;
 }
 
 const char* Ugyfel::getNevChar() const {return nev.c_str();}
 String Ugyfel::getNevStr() const {return nev;}
-int Ugyfel::getId() const {return id;}
-Date Ugyfel::getSzul() const {return szul;}
+//int Ugyfel::getId() const {return id;}
+//Date Ugyfel::getSzul() const {return this->getDate();}
 int Ugyfel::getMiota() const {return miota;}
 int Ugyfel::getMeret() const {return meret;}
 double Ugyfel::getEgyenleg() const {return egyenleg;}
@@ -140,14 +140,14 @@ void Ugyfel::fogyasztasBejelent(double mennyi) {
 bool Ugyfel::operator==(const Ugyfel &rhs) const {
     return nev == rhs.getNevStr() &&
            id == rhs.id &&
-           szul == rhs.szul &&
+           date == rhs.date &&
            miota == rhs.miota;
 }
 
 bool Ugyfel::operator==(Ugyfel *rhs) const {
     return nev == rhs->getNevStr() &&
            id == rhs->id &&
-           szul == rhs->szul &&
+           date == rhs->date &&
            miota == rhs->miota;
 }
 
@@ -204,28 +204,28 @@ int Date::operator-(const Date &rhs) const {
 
 /// Szerződés osztály
 Szerzodes::Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar = 300, int az = 987)
-    :id(az), datum(e, h, n), ugyfel(kicsoda), ar(ar) {
+    :Base(az, e, h, n), ugyfel(kicsoda), ar(ar) {
     Pr(this->datum);
 }
 
 Szerzodes::Szerzodes(const Date& date, const Ugyfel& kicsoda, int ar = 300, int az = 987)
-    : id(az), datum(date), ugyfel(kicsoda), ar(ar) {
+    : Base(az, date), ugyfel(kicsoda), ar(ar) {
     Pr("Szerződés ctor: " << this->datum);
 }
 
-int Szerzodes::getId() const {return id;}
-Date Szerzodes::getDate() const {return datum;}
+//int Szerzodes::getId() const {return id;}
+//Date Szerzodes::getDate() const {return date;}
 Ugyfel& Szerzodes::getUgyfel() const {return (Ugyfel &) ugyfel;}
 int Szerzodes::getAr() const {return ar;}
 
 bool Szerzodes::operator==(const Szerzodes &rhs) const {
     return id == rhs.id &&
-           datum == rhs.datum &&
+           date == rhs.date &&
            ugyfel == rhs.ugyfel &&
            ar == rhs.ar;
 }
 
-std::ostream& operator<<(std::ostream& os, Szerzodes& rhs){
+std::ostream& operator<<(std::ostream& os, const Szerzodes& rhs){
     os << "Szerződés (" << rhs.getId() << ") az MVM és " <<  rhs.getUgyfel() << "\tközött: "
         << rhs.getDate() << " napon " << rhs.getAr() << "Ft/kW-ról." << std::endl;
     return os;
@@ -258,6 +258,10 @@ void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig) {
 
 void befizet(Ugyfel &ugyfel, double osszeg) {
     ugyfel.setEgyenleg(ugyfel.getEgyenleg() + osszeg);
+}
+
+double egyenlegLekerdez(const Ugyfel &ugyfel) {
+    return ugyfel.getEgyenleg();
 }
 
 

@@ -87,12 +87,26 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs);
 /// @return istream
 std::istream& operator>>(std::istream& is, Date& rhs);
 
+/// =========================== Base osztály =================================== ///
+/// alaposztály amiből az Ügyfél és a Szerzdés örököl, dátumot és azonosítót.
+class Base{
+protected:
+    int id; /// Az ugyfél vagy a szerződés azonosítója
+    Date date; /// dátum, az Ugyfélnél születási év, a Szerződésnél, a megkötés dátuma.
+public:
+    Base();
+    Base(int, Date);
+    Base(int, int, int, int);
+
+    int getId() const;
+    Date getDate() const;
+    void setDate(const Date&);
+    void setId(int);
+};
 
 /// =========================== Ugyfél osztály ================================= ///
-class Ugyfel{
+class Ugyfel : public Base{
     String nev; /// az ügyfél neve.
-    int id; /// Az adott ügyfél személyes azonosítója, minden ügyfélnek különböző.
-    Date szul; /// Az ügyfél születési dátum
     int miota; /// Hány hónapja ügyfél, megegyezik, hogy hány hónapban fogyasztott.
     double egyenleg; /// Az ügygél szálmáján lévő egyenleg, lehet negatív is. [Ft]
     size_t meret; /// A fogyasztás tömb mérete, általában megegyezik a miota-val (hány hónapja ügyfél az ügfyél)
@@ -106,8 +120,8 @@ public:
     /// getter függvények:
     const char * getNevChar() const;
     String getNevStr() const;
-    int getId() const;
-    Date getSzul() const;
+    //int getId() const;
+    //Date getSzul() const;
     int getMiota() const;
     int getMeret() const;
     double getEgyenleg() const;
@@ -115,8 +129,7 @@ public:
 
     /// Setter függvények:
     void setNev(const String& n) {this->nev = String(n);}
-    void setId(int az){this->id = az;}
-    void setSzulEv(const Date& szulDate){this->szul = szulDate;}
+    //void setSzul(const Date& szulDate){this->setDate(szulDate);}
     void setMiota(int kezdes){this->miota = kezdes;}
     void setEgyenleg(double osszeg) {this->egyenleg = osszeg;}
 
@@ -158,25 +171,23 @@ std::istream& operator>>(std::istream& is, Ugyfel& rhs);
 ///======================= Szerződés osztály =======================///
 
 /// Szerződés osztály, szerződések tárolására
-class Szerzodes{
-    int id; ///A szerződés egyedi azonosítója, szerződészám
-    Date datum; ///datum amikor a szerződés köttetett.
+class Szerzodes : public Base{
     Ugyfel ugyfel; /// Az ügyfél akivel a szerződés kötettet, a másik fél az MVM
     int ar; /// mennyibe kerül az áram [Ft/kW]
 
 public:
-    Szerzodes() : id(0), datum(0, 0, 0), ugyfel("Üres", 0, Date(0, 0, 0)), ar(0) {};
+    Szerzodes() : Base(), ugyfel("Üres", 0, Date(0, 0, 0)), ar(0) {};
     Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar, int az);
     Szerzodes(const Date&, const Ugyfel&, int, int);
     ///getter függvények:
-    int getId() const;
-    Date getDate() const;
+    //int getId() const override;
+    //Date getDate() const override;
     Ugyfel& getUgyfel() const;
     int getAr() const;
 
     /// Setter függvények: Ezeket egyelőre nem használjuk őket, mert van rá ctor
-    void setId(int az){this->id = az;}
-    void setDate(const Date& date){this->datum = date;}
+    void setAz(int az){this->setId(az);}
+    void setDatum(const Date& date){this->setDate(date);}
     void setUgyfel(const Ugyfel& ugy){this->ugyfel = ugy;}
     void setAr(int ara){ this->ar = ara;}
 
@@ -239,6 +250,12 @@ void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig);
 /// @param ugyfel - melyik ügyfélnek
 /// @param osszeg - mennyit
 void befizet(Ugyfel& ugyfel, double osszeg);
+
+/// Egyenleg lekérdezése:
+/// csak hogy legyen egy globalis fv is, mert miért ne.
+/// @param ugyfel - melyik ügyfélnek?
+/// @return - mennyi az üél egyenlege
+double egyenlegLekerdez(const Ugyfel& ugyfel);
 
 #endif //NAGYHAZI_MVM_H
 

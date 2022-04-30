@@ -45,7 +45,7 @@ int main() {
         Ugyfel u2(str, 124, Date(1990), 4);
         EXPECT_STREQ("Jancsi Jóska", u0.getNevChar());
         EXPECT_EQ(123, u0.getId());
-        EXPECT_EQ(Date(2022), u0.getSzul());
+        EXPECT_EQ(Date(2022), u0.getDate());
         EXPECT_EQ(3, u0.getMiota());
         EXPECT_EQ(Ugyfel("Jancsi Jóska", 123, Date(2022), 3), u1);
         EXPECT_EQ(Ugyfel("Hello bello", 124, Date(1990), 4), u2);
@@ -56,7 +56,7 @@ int main() {
         iss >> u2;
         EXPECT_STREQ("Helloka Belloka", u2.getNevChar());
         EXPECT_EQ(120, u2.getId());
-        EXPECT_EQ(Date(2000), u2.getSzul());
+        EXPECT_EQ(Date(2000), u2.getDate());
         EXPECT_EQ(15, u2.getMiota());
     END
 
@@ -71,6 +71,12 @@ int main() {
         u2.befizet(200);
         EXPECT_EQ(2000, u2.getEgyenleg());
     END
+
+    TEST(Ugyfel, egyenlegLekerdez){
+        Ugyfel u0("Enci Penci2", 124, Date(2013), 6);
+        u0.setEgyenleg(500);
+        EXPECT_EQ(500, egyenlegLekerdez(u0));
+    }END
 
     TEST(Szerzodes, Konstruktor)
         Ugyfel u0("Enci Penci2", 124, Date(2013), 6);
