@@ -6,7 +6,7 @@ PROG = main
 
 PROG_O = $(PROG).o mvm.o string5.o date.o base.o  ugyfel.o szerzodes.o
 
-PROG_H = mvm.h string5.h date.h base.h  ugyfel.h szerzodes.h #
+PROG_H = mvm.h string5.h date.h base.h  ugyfel.h szerzodes.h set.hpp #
 
 PROG_L =              # program libjei
 MTRACE_O = memtrace.o # memtrace object fajl

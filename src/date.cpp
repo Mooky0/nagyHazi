@@ -9,7 +9,7 @@
 int Date::getEv() const {return ev;}
 int Date::getHo() const {return ho;}
 int Date::getNap() const {return nap;}
-/// Setterek:
+/// Setterek: (mivel nincs rájuk szükség ezért ki vannak kommentelve)
 //void Date::setEv(int e) {Date::ev = e;}
 //void Date::setHo(int h) {Date::ho = h;}
 //void Date::setNap(int n) {Date::nap = n;}
@@ -28,7 +28,7 @@ int Date::szokonapokSzama() const {
 std::ostream& operator<<(std::ostream& os, const Date& rhs){
     os << std::setw(4) << rhs.getEv() << ". " << std::setw(2) << std::setfill('0')
        << rhs.getHo() << ". " << std::setw(2) << std::setfill('0') << rhs.getNap()
-       << "." << std::endl;
+       << ".";
     return os;
 }
 /// istream:

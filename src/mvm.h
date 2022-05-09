@@ -12,6 +12,7 @@
 #include "date.h"
 #include "base.h"
 #include "ugyfel.h"
+#include "set.hpp"
 #include "szerzodes.h"
 
 /// =========================== Egyéb függvények ========================

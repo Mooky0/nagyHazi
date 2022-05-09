@@ -1,7 +1,6 @@
 #include <iostream>
 
-//#define DEBUG
-    #include "string5.h"
+#include "string5.h"
 #include "mvm.h"
 //#define MEMTRACE
 #include "gtest_lite.h"
@@ -194,10 +193,13 @@ int main() {
             EXPECT_FALSE(s0.isElement(Szerzodes(1999, 05, 14, u0, 300, 987)));
             EXPECT_FALSE(s0.isElement(Szerzodes(2003, 1, 29, u0, 5, 456)));
         } ENDM
-    /*
+
     TEST(Random, valami)
         std::cout << "Szia!" << std::endl;
+        Ugyfel u0("Vicc Elek", 1, Date(2022, 5, 9));
+        ASSERT_NO_THROW(std::cout << u0;)
+        Szerzodes sz0(Date(), u0, 11, 12);
+        ASSERT_NO_THROW(std::cout << sz0;)
     END
-    */
     return 0;
 }
