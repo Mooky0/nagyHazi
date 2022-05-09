@@ -200,6 +200,13 @@ int main() {
         ASSERT_NO_THROW(std::cout << u0;)
         Szerzodes sz0(Date(), u0, 11, 12);
         ASSERT_NO_THROW(std::cout << sz0;)
+        Set<Ugyfel> s0;
+        s0.insert(u0);
+        s0.insert(Ugyfel("Helloka", 123, Date()));
+        Set<Szerzodes> s1;
+        s1.insert(sz0);
+        s1.insert(Szerzodes());
+        fileKiir(s0, s1);
     END
     return 0;
 }

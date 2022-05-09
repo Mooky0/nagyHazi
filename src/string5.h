@@ -169,6 +169,7 @@ public:
 /// ...
 String operator+(char c, String str);
 std::ostream& operator<<(std::ostream& os, const String& rhs);
+std::ofstream& operator<<(std::ofstream& os, const String& rhs);
 std::istream& operator>>(std::istream& is, String& rhs);
 
 #endif

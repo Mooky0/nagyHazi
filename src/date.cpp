@@ -31,6 +31,7 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs){
        << ".";
     return os;
 }
+
 /// istream:
 std::istream& operator>>(std::istream& is, Date& rhs){
     int ev, ho, nap;
@@ -38,6 +39,12 @@ std::istream& operator>>(std::istream& is, Date& rhs){
     rhs = Date(ev, ho, nap);
     return is;
 }
+
+std::ofstream& operator<<(std::ofstream& os, const Date& rhs) {
+    os << rhs.getEv() << " " << rhs.getHo() << " " << rhs.getNap() << std::endl;
+    return os;
+}
+
 /// kivonás operátor
 int Date::operator-(const Date &rhs) const {
     ///Első dátum előtt eltelt napok száma:

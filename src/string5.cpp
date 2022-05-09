@@ -107,6 +107,11 @@ std::ostream& operator<<(std::ostream& os, const String& rhs){
     return os;
 }
 
+std::ofstream& operator<<(std::ofstream& ofs, const String& rhs){
+    ofs << rhs.c_str();
+    return ofs;
+}
+
 
 /// >> operátor, ami beolvas az istream-ről egy szót
 std::istream& operator>>(std::istream& is, String& rhs){

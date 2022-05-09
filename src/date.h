@@ -7,6 +7,7 @@
 #include "iostream"
 #include "iomanip"
 #include "debug.h"
+#include "fstream"
 
 /// ======================= Dátum osztály ======================= ///
 
@@ -69,6 +70,8 @@ public:
 /// @param rhs - kiírandó dátum
 /// @return ostream
 std::ostream& operator<<(std::ostream& os, const Date& rhs);
+
+//std::ofstream& operator<<(std::ofstream& os, const Date& rhs);
 
 /// instream operator
 /// @param is - istream

@@ -67,6 +67,8 @@ public:
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
 // std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
 
+std::ofstream& operator<<(std::ofstream& os, const Ugyfel& rhs);
+
 /// Insream operator
 /// @param is - istream;
 /// @param rhs - beolvasandó Ügyfél

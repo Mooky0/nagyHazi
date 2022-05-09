@@ -5,16 +5,8 @@
 /// A kiírásokhoz Makró, ha def-elt kiír, ha nem, nem.
 //#define DEBUG
 #include "mvm.h"
-
-#include <utility>
-#include <cstring>
-
-
-
-
-
-
-
+#include "fstream"
+#include "iostream"
 
 /// Egyéb függvények:
 void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig) {
@@ -33,6 +25,15 @@ void befizet(Ugyfel &ugyfel, double osszeg) {
 
 double egyenlegLekerdez(const Ugyfel &ugyfel) {
     return ugyfel.getEgyenleg();
+}
+
+void fileKiir(const Set<Ugyfel> s0, const Set<Szerzodes>& s1) {
+    std::ofstream kiFile("output.txt");
+    kiFile << "Hello world!" << std::endl;
+    for ( int i = 0; i < s0.size(); i++){
+        kiFile << s0[i];
+    }
+    kiFile.close();
 }
 
 

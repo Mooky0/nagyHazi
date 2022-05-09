@@ -15,7 +15,7 @@ public:
     explicit Set(int n = 0) :n(n) {
         adat = new T[n];
     }
-    int size(){return n;}
+    int size() const {return n;}
     bool isElement(T par) {
         Pr(Hello);
         for (int i =0; i < n; i++)
@@ -41,6 +41,11 @@ public:
         }
         adat[n++] = par;
         delete [] temp;
+    }
+    T operator[](int idx) const{
+        if (idx < 0 || idx > n)
+            throw std::out_of_range("Hello");
+        return adat[idx];
     }
     ~Set(){delete [] adat;}
 };

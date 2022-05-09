@@ -67,6 +67,11 @@ std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
        << rhs.getMiota() << " hónapja." << std::endl;
     return os;
 }
+std::ofstream& operator<<(std::ofstream& os, const Ugyfel& rhs){
+    os << rhs.getNevStr() << std::endl << rhs.getId() << std::endl << rhs.getEgyenleg() << rhs.getEgyenleg() << std::endl << std::endl;
+    return os;
+}
+
 
 std::istream& operator>>(std::istream& is, Ugyfel& rhs){
     String neve;
