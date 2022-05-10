@@ -17,7 +17,7 @@ public:
     }
     int size() const {return n;}
     bool isElement(T par) {
-        Pr(Hello);
+        Pr("Hello");
         for (int i =0; i < n; i++)
             if (adat[i] == par)
                 return true;
@@ -42,11 +42,23 @@ public:
         adat[n++] = par;
         delete [] temp;
     }
-    T operator[](int idx) const{
+    T& operator[](int idx) const{
         if (idx < 0 || idx > n)
             throw std::out_of_range("Hello");
         return adat[idx];
     }
+    Set& operator=(const Set& rhs){
+        /*if (this == rhs)
+            return *this;*/
+        delete[] this->adat;
+        this->n = rhs.n;
+        this->adat = new T[n];
+        for (int i=0; i < n; i++){
+            this->adat[i] = rhs[i];
+        }
+        return *this;
+    }
+
     ~Set(){delete [] adat;}
 };
 

@@ -197,9 +197,9 @@ int main() {
     TEST(Random, valami)
         std::cout << "Szia!" << std::endl;
         Ugyfel u0("Vicc Elek", 1, Date(2022, 5, 9));
-        ASSERT_NO_THROW(std::cout << u0;)
+        //ASSERT_NO_THROW(std::cout << u0;)
         Szerzodes sz0(Date(), u0, 11, 12);
-        ASSERT_NO_THROW(std::cout << sz0;)
+        //ASSERT_NO_THROW(std::cout << sz0;)
         Set<Ugyfel> s0;
         s0.insert(u0);
         s0.insert(Ugyfel("Helloka", 123, Date()));
@@ -207,6 +207,9 @@ int main() {
         s1.insert(sz0);
         s1.insert(Szerzodes());
         fileKiir(s0, s1);
+        Set<Ugyfel> s2;
+        s2 = ugyfelekBeolvas();
+        std::cout << s2[0] << s2[1];
     END
     return 0;
 }

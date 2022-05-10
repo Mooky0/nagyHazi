@@ -65,7 +65,13 @@ public:
 /// @param os - ostream;
 /// @param rhs - kiiírandó Ügyfél
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
-// std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
+/*
+std::ostream& operator<<(std::ostream& os, Ugyfel rhs){
+    os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getDate()
+       << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
+       << rhs.getMiota() << " hónapja." << std::endl;
+    return os;
+}*/
 
 std::ofstream& operator<<(std::ofstream& os, const Ugyfel& rhs);
 

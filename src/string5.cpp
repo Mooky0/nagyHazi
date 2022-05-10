@@ -121,7 +121,7 @@ std::istream& operator>>(std::istream& is, String& rhs){
     is.setf(std::ios_base::skipws);
     while(is >> c){
         is.unsetf(std::ios_base::skipws);
-        if (c == '\n' || c == '\0') {
+        if (c == '\n' || c == '\0' || isdigit(c)) {
             is.putback(c);
             break;
         } else {

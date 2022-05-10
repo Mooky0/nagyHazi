@@ -36,7 +36,9 @@ void befizet(Ugyfel& ugyfel, double osszeg);
 /// @return - mennyi az üél egyenlege
 double egyenlegLekerdez(const Ugyfel& ugyfel);
 
-void fileKiir(Set<Ugyfel>, const Set<Szerzodes>&);
+void fileKiir(const Set<Ugyfel>&, const Set<Szerzodes>&);
+
+Set<Ugyfel> ugyfelekBeolvas();
 
 #endif //NAGYHAZI_MVM_H
 
