@@ -57,7 +57,24 @@ Set<Ugyfel> ugyfelekBeolvas() {
         s.insert(Ugyfel(nev, id, Date(ev, ho, nap), miota));
         Pr("Instert után");
     }
+    if(!ugyfelekFile.eof())
+        throw "Hibás a fáj formátuma";
     ugyfelekFile.close();
+    return s;
+}
+
+Set<Szerzodes> szerzodesekBeolvas() {
+    std::ifstream szerzFile("szerzodesek.txt");
+    Set<Szerzodes> s;
+    String nev;
+    int az, egyenleg, miota, uev, uho, unap, ar, szev, szho, sznap;
+    while(szerzFile >> az >> nev >> egyenleg >> miota >> uev >> uho >> unap >> ar >> szev >> szho >> sznap){
+        Ugyfel u(nev, az, Date(uev, uho, unap), miota);
+        s.insert(Szerzodes(szev, szho, sznap, u, ar, az));
+    }
+    if(!szerzFile.eof())
+        throw "Hibás a fáj formátuma";
+    szerzFile.close();
     return s;
 }
 

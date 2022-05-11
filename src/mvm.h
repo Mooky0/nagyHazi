@@ -40,5 +40,7 @@ void fileKiir(const Set<Ugyfel>&, const Set<Szerzodes>&);
 
 Set<Ugyfel> ugyfelekBeolvas();
 
+Set<Szerzodes> szerzodesekBeolvas();
+
 #endif //NAGYHAZI_MVM_H
 

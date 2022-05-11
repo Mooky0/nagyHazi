@@ -3,10 +3,18 @@
 #include "string5.h"
 #include "mvm.h"
 //#define MEMTRACE
-#include "gtest_lite.h"
 #include "memtrace.h"
 
+#define MENU ///Ha a menürendszert szeretnénk futtatni
+//#define TESTESETEK /// Ha a teszteseteket szeretnénk futtatni
+
+#ifdef TESTESETEK
+#include "gtest_lite.h"
+#endif
+
 int main() {
+
+    #ifdef TESTESETEK
     std::cout << "Hello, World!" << std::endl;
 
     TEST(Datumteszt, Konstruktor)
@@ -208,8 +216,28 @@ int main() {
         s1.insert(Szerzodes());
         fileKiir(s0, s1);
         Set<Ugyfel> s2;
-        s2 = ugyfelekBeolvas();
-        std::cout << s2[0] << s2[1];
+        EXPECT_NO_THROW(s2 = ugyfelekBeolvas());
+        Pr(s2[0] << s2[1]);
+
+        Set<Szerzodes> s3;
+        EXPECT_NO_THROW(s3 = szerzodesekBeolvas());
+        Pr(s3[0] << s3[1]);
     END
+    #endif //TESTESETEK
+    // Itt a vége ha a teszteseteket futtatjuk
+
+    ///A használható menürendszer:
+#ifdef MENU
+
+    String opcio;
+
+    std::cout << "HVM nyilvántartórendszer:" << std::endl;
+    std::cout << "Új ügyfél felvétele:\t [uj u]\nÚj szerződés felvétele:\t [uj sz]\nSzerződések kiírása:\t [ki sz]\n"
+        << "Ügyfelek kiírása:\t [ki u]\nSzamlazas:\t szamla [szID] [mettol] [meddig]" << std::endl << ">";
+    std::cin >> opcio;
+    std::cout << opcio;
+
+#endif //MENU
+
     return 0;
 }
