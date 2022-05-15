@@ -9,10 +9,6 @@
 int Date::getEv() const {return ev;}
 int Date::getHo() const {return ho;}
 int Date::getNap() const {return nap;}
-/// Setterek: (mivel nincs rájuk szükség ezért ki vannak kommentelve)
-//void Date::setEv(int e) {Date::ev = e;}
-//void Date::setHo(int h) {Date::ho = h;}
-//void Date::setNap(int n) {Date::nap = n;}
 
 int Date::szokonapokSzama() const {
     int evek = this->ev;
@@ -34,20 +30,51 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs){
 
 /// istream:
 std::istream& operator>>(std::istream& is, Date& rhs){
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    int year = 1900 + ltm->tm_year;
+    int month = 1 + ltm->tm_mon;
+    int day = ltm->tm_mday;
     int ev, ho, nap;
-    std::cout << "Év: ";
-    is >> ev;
-    std::cout << "honap: ";
-    is >> ho;
-    std::cout << "nap: ";
-    is >> nap;
+    while(true) {
+        std::cout << "Év: ";
+        is >> ev;
+        while (/*is.fail() || */ev < 1900 || ev > year) {
+            std::cout << "nem szám, vagy nem valid érték" << std::endl << "Év: ";
+            is.clear();
+            is.ignore(256, '\n');
+            is >> ev;
+        }
+        std::cout << "Hónap: ";
+        is >> ho;
+        while (is.fail() || ho < 0 || ho > 12) {
+            std::cout << "nem szám, vagy nem valid érték" << std::endl << "Hónap: ";
+            is.clear();
+            is.ignore(256, '\n');
+            is >> ho;
+        }
+        std::cout << "Nap: ";
+        is >> nap;
+        while (is.fail() || nap < 0 || nap > 31) {
+            std::cout << "nem szám, vagy nem valid érték" << std::endl << "Nap: ";
+            is.clear();
+            is.ignore(256, '\n');
+            is >> nap;
+        }
+        if(ev == year && ho > month){
+            std::cout << "Nem lehet a mai dátumnál újabb";
+            continue;
+        }
+        if(ev == year && ho == month && nap > day) {
+            std::cout << "Nem lehet a mai dátumnál újabb";
+            continue;
+        }
+        else
+            break;
+    }
+
     rhs = Date(ev, ho, nap);
     return is;
-}
-
-std::ofstream& operator<<(std::ofstream& os, const Date& rhs) {
-    os << rhs.getEv() << " " << rhs.getHo() << " " << rhs.getNap() << std::endl;
-    return os;
 }
 
 /// kivonás operátor

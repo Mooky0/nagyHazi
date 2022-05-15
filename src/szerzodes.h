@@ -7,7 +7,6 @@
 
 #include "base.h"
 #include "ugyfel.h"
-#include "debug.h"
 
 ///======================= Szerződés osztály =======================///
 
@@ -21,15 +20,11 @@ public:
     Szerzodes(int e, int h, int n, int kicsoda, int ar, int az);
     Szerzodes(const Date&, int, int, int);
     Szerzodes(const Szerzodes& rhs);
-    ///getter függvények:
-    //int getId() const override;
-    //Date getDate() const override;
+    /// getter függvények
     int getUgyfel() const;
     int getAr() const;
 
     /// Setter függvények: Ezeket egyelőre nem használjuk őket, mert van rá ctor
-    void setAz(int az){this->setId(az);}
-    void setDatum(const Date& date){this->setDate(date);}
     void setUgyfel(const int ugy){this->ugyfelId = ugy;}
     void setAr(int ara){ this->ar = ara;}
 

@@ -5,7 +5,7 @@
 #ifndef NAGYHAZI_MVM_H
 #define NAGYHAZI_MVM_H
 
-//#include <iostream>
+
 #include "string5.h"
 
 

@@ -8,12 +8,10 @@
 /// Szerződés osztály
 Szerzodes::Szerzodes(int e, int h, int n, int kicsoda, int ar = 300, int az = 987)
         :Base(az, e, h, n), ugyfelId(kicsoda), ar(ar) {
-    //Pr(this->getDate());
 }
 
 Szerzodes::Szerzodes(const Date& date, int kicsoda, int ar = 300, int az = 987)
         : Base(az, date), ugyfelId(kicsoda), ar(ar) {
-    //Pr("Szerződés ctor: " << this->getDate());
 }
 
 Szerzodes::Szerzodes(const Szerzodes &rhs): Base(rhs.id, rhs.date), ugyfelId(rhs.ugyfelId), ar(rhs.ar) {

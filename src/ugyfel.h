@@ -7,7 +7,6 @@
 
 #include "base.h"
 #include "string5.h"
-#include "debug.h"
 
 /// =========================== Ugyfél osztály ================================= ///
 class Ugyfel : public Base{
@@ -18,15 +17,13 @@ class Ugyfel : public Base{
     double* fogyasztas; /// a fogyasztás tömbje, minden hónapban mióta ügyfél mennyit fogyasztott [kW] ?
 public:
     Ugyfel();
-    Ugyfel(const String& nev, int az, const Date& date, int kezdes); /// A kezdes def value =0, ez a cpp-ben van.
+    Ugyfel(const String& nev, int az, const Date& date, int kezdes, int egyenleg); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const char * nev, int az, const Date& date, int kezdes = 0); /// A kezdes def value =0, ez a cpp-ben van.
     Ugyfel(const Ugyfel& rhs);
 
     /// getter függvények:
     const char * getNevChar() const;
     String getNevStr() const;
-    //int getId() const;
-    //Date getSzul() const;
     int getMiota() const;
     int getMeret() const;
     double getEgyenleg() const;
@@ -57,7 +54,6 @@ public:
 
     /// dtor csak felszabít
     virtual ~Ugyfel(){
-        Pr("Ugyfél dtor: " <<  this->nev);
         delete [] fogyasztas;
     }
 };

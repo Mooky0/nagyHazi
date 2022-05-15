@@ -6,8 +6,8 @@
 #define SRC_DATE_H
 #include "iostream"
 #include "iomanip"
-#include "debug.h"
 #include "fstream"
+#include "ctime"
 
 /// ======================= Dátum osztály ======================= ///
 
@@ -24,17 +24,12 @@ public:
     /// @param h - Hónap
     /// @param n - Nap
     explicit Date(int e=0, int h=0, int n=0) : ev(e), ho(h), nap(n){
-        Pr("Dátum konstruktor: " << ev << " " << ho << " " << nap);
     }
     Date(const Date& rhs){
         this->ev = rhs.ev;
         this->ho = rhs.ho;
         this->nap = rhs.nap;
     }
-    /// Setter függvények: (mivel nem használuk őket ki vannak kommentelve)
-//    void setEv(int ev);
-//    void setHo(int ho);
-//    void setNap(int nap);
 
     /// Getter függvények
     int getEv() const;
@@ -71,7 +66,6 @@ public:
 /// @return ostream
 std::ostream& operator<<(std::ostream& os, const Date& rhs);
 
-//std::ofstream& operator<<(std::ofstream& os, const Date& rhs);
 
 /// instream operator
 /// @param is - istream

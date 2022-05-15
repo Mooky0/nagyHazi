@@ -34,3 +34,7 @@ main
 
 .idea/
 *.zip
+# *test
+*test*
+src/test/test
+src/test/test.cpp

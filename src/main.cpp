@@ -49,7 +49,7 @@ int main() {
         Ugyfel u0("Jancsi Jóska", 123, Date(2022), 3);
         Ugyfel u1(u0);
         String str("Hello bello");
-        Ugyfel u2(str, 124, Date(1990), 4);
+        Ugyfel u2(str, 124, Date(1990), 4, 0);
         EXPECT_STREQ("Jancsi Jóska", u0.getNevChar());
         EXPECT_EQ(123, u0.getId());
         EXPECT_EQ(Date(2022), u0.getDate());
@@ -59,11 +59,11 @@ int main() {
     END
     TEST(Ugyfel, Input)
         Ugyfel u2/*("Helloka Belloka", 120, 2000, 15)*/;
-        std::istringstream iss("Helloka Belloka\n120 2000 0 0");
+        std::istringstream iss("Helloka Belloka\n120 2000 1 1");
         iss >> u2;
         EXPECT_STREQ("Helloka Belloka", u2.getNevChar());
         EXPECT_EQ(120, u2.getId());
-        EXPECT_EQ(Date(2000), u2.getDate());
+        EXPECT_EQ(Date(2000, 1, 1), u2.getDate());
         EXPECT_EQ(0, u2.getMiota());
     END
 
@@ -110,13 +110,11 @@ int main() {
         Set<Ugyfel> set;
         set.insert(u0);
         EXPECT_NO_THROW(szamlaz(sz0, d1, d0, set));
-        //EXPECT_TRUE(gtest_lite::almostEQ(310.0, sz0.getUgyfel().getEgyenleg()));
         EXPECT_EQ(310.0, set[0].getEgyenleg());
     END
 
 
     TEST(Ugyfel, fogyasztas)
-        Pr("Nem tudom mit kéne csinálni");
         Ugyfel u0;
         u0.setMiota(1);
         u0.fogyasztasBejelent(300);
@@ -130,7 +128,6 @@ int main() {
         EXPECT_EQ(5, u0.getMiota());
     END
 
-    Pr("Lab08-as halmaz tesztek:");
     /// Ezek a 8-adik laborból a halmazok tesztjei
     TEST(int, insert) {
             Set<int> s0;
@@ -177,29 +174,27 @@ int main() {
             EXPECT_FALSE(s0.isElement(Szerzodes(2003, 1, 29, 0, 5, 456)));
     } ENDM
 
-    TEST(Fálj, kezelés)
-        Ugyfel u0("Vicc Elek", 1, Date(2022, 5, 9));
-        //ASSERT_NO_THROW(std::cout << u0;)
-        Szerzodes sz0(Date(), 0, 11, 12);
-        //ASSERT_NO_THROW(std::cout << sz0;)
-        Set<Ugyfel> s0;
-        s0.insert(u0);
-        s0.insert(Ugyfel("Helloka", 123, Date()));
-        Set<Szerzodes> s1;
-        s1.insert(sz0);
-        s1.insert(Szerzodes());
-        fileKiir(s0, s1);
+    TEST(Fálj, kezelés){
         Set<Ugyfel> s2;
         EXPECT_NO_THROW(s2 = ugyfelekBeolvas());
-        Pr(s2[0] << s2[1]);
+        EXPECT_EQ(1, s2[0].getId());
+        EXPECT_STREQ("Vicc Elek", s2[0].getNevChar());
+            EXPECT_EQ(1500, s2[0].getEgyenleg());
+            EXPECT_EQ(5, s2[0].getMiota());
+            EXPECT_EQ(Date(1998, 9, 20), s2[0].getDate());
 
-        Set<Szerzodes> s3;
-        EXPECT_NO_THROW(s3 = szerzodesekBeolvas());
-        Pr(s3[0] << s3[1]);
-    END
+            EXPECT_EQ(3, s2[2].getId());
+            EXPECT_STREQ("Almás Pite", s2[2].getNevChar());
+            EXPECT_EQ(549, s2[2].getEgyenleg());
+            EXPECT_EQ(18, s2[2].getMiota());
+            EXPECT_EQ(Date(2003, 3, 4), s2[2].getDate());
+
+        //Set<Szerzodes> s3;
+        //EXPECT_NO_THROW(s3 = szerzodesekBeolvas());
+    }END
 
 #endif //TESTESETEK
-    // Itt a vége ha a teszteseteket futtatjuk
+    /// Itt a vége ha a teszteseteket futtatjuk
 
     ///A használható menürendszer:
 #ifdef MENU
@@ -230,80 +225,104 @@ int main() {
         if(std::cin.fail()){
             std::cout << "Nem megfelelő formátum" << std::endl;
             std::cin.clear();
+            std::cin.ignore(256, '\n');
             continue;
         }
-        //std::cout << opcio << std::endl;
 
 
         if (opcio == "uj") {
-            std::cout << "mit?" << std::endl <<  ">>";
-            std::cin >> al;
-            if (al == "u"){
-                Ugyfel u;
-                std::cin >> u;
-                if(std::cin.fail()){
-                    std::cout << "Nem megfelelő formátum" << std::endl;
-                    std::cin.clear();
+            while(true){
+                std::cout << "mit?" << std::endl << ">>";
+                std::cin >> al;
+                if (al == "u") {
+                    Ugyfel u;
+                    std::cin >> u;
+                    if (std::cin.fail()) {
+                        std::cout << "Nem megfelelő formátum" << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(256, '\n');
+                        continue;
+                    }
+                    ugyfelek.insert(u);
+                    break;
+                }
+                else if (al == "sz") {
+                    Szerzodes sz;
+                    std::cin >> sz;
+                    if (std::cin.fail()) {
+                        std::cout << "Nem megfelelő formátum" << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(256, '\n');
+                        continue;
+                    }
+                    szerzodesek.insert(sz);
+                    break;
+                }
+                else {
+                    std::cout << "Argumentumok hiányoznak az \"uj\"-hoz" << std::endl;
                     continue;
                 }
-                ugyfelek.insert(u);
             }
-            else if (al == "sz") {
-                //std::cout << "Új szerződés:" << std::endl;
-                Szerzodes sz;
-                std::cin >> sz;
-                if(std::cin.fail()){
-                    std::cout << "Nem megfelelő formátum" << std::endl;
-                    std::cin.clear();
-                    continue;
-                }
-                szerzodesek.insert(sz);
-            }
-            else
-                std::cout << "Argumentumok hiányoznak az \"uj\"-hoz" << std::endl;
         }
-        if (opcio == "ki") {
-            std::cout << "mit?" << std::endl <<  ">>";
-            std::cin >> al;
-            if (al == "u"){
-                if (ugyfelek.size() == 0) {
-                    std::cout << "Nincs tárolt elem";
+        else if (opcio == "ki") {
+            while(true){
+                std::cout << "mit?" << std::endl << ">>";
+                std::cin >> al;
+                if (al == "u") {
+                    if (ugyfelek.size() == 0) {
+                        std::cout << "Nincs tárolt elem";
+                        std::cin.ignore(256, '\n');
+                        continue;
+                    }
+                    for (int i = 0; i < ugyfelek.size(); ++i) {
+                        std::cout << ugyfelek[i];
+                    }
+                    break;
+                }
+                else if (al == "sz") {
+                    if (szerzodesek.size() == 0) {
+                        std::cout << "Nincs tárolt elem";
+                        std::cin.ignore(256, '\n');
+                        continue;
+                    }
+                    for (int i = 0; i < szerzodesek.size(); ++i) {
+                        std::cout << szerzodesek[i];
+                    }
+                    break;
+                }
+                else {
+                    std::cout << "Argumentumok hiányoznak az \"ki\"-hez, vagy rossz bemenet" << std::endl;
                     continue;
                 }
-                for (int i = 0; i < ugyfelek.size(); ++i) {
-                    std::cout << ugyfelek[i];
-                }
             }
-            else if (al == "sz") {
-                if (szerzodesek.size() == 0) {
-                    std::cout << "Nincs tárolt elem";
-                    continue;
-                }
-                for (int i = 0; i < szerzodesek.size(); ++i) {
-                    std::cout << szerzodesek[i];
-                }
-            }
-            else
-                std::cout << "Argumentumok hiányoznak az \"uj\"-hoz" << std::endl;
         }
         else if(opcio == "szamla"){
             int az;
             Date mettol, meddig;
             std::cout << "Szerződés azonosító: ";
             std::cin >> az;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő azonosító" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Szerződés azonosító: ";
+                std::cin >> az;
             }
             std::cout << "Mettől: ";
             std::cin >> mettol;
-            std::cout << "Meddig: ";
-            std::cin >> meddig;
-            if(std::cin.fail()) {
+            while(std::cin.fail()) {
                 std::cout << "Nem megfelelő bemenet";
                 std::cout.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cin >> meddig;
+            }
+            std::cout << "Meddig: ";
+            std::cin >> meddig;
+            while(std::cin.fail()) {
+                std::cout << "Nem megfelelő bemenet";
+                std::cout.clear();
+                std::cin.ignore(256, '\n');
+                std::cin >> meddig;
             }
             Szerzodes sz;
             int sorszam = szerzodesek.lookup(az);
@@ -320,22 +339,25 @@ int main() {
             }
         }
         else if(opcio == "bef"){
-            //std::cout << "befizet, parancs: " << opcio << std::endl;
             int az;
             double osszeg;
-            std::cout << "Ügyfél formátum: ";
+            std::cout << "Ügyfél azonosító: ";
             std::cin >> az;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő azonosító" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Ügyfél azonosító: ";
+                std::cin >> az;
             }
             std::cout << "Befizetett összeg: ";
             std::cin >> osszeg;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő formátum" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Befizetett összeg: ";
+                std::cin >> osszeg;
             }
             Ugyfel u;
             int sorszam = ugyfelek.lookup(az);
@@ -343,18 +365,18 @@ int main() {
                 std::cout << "Nincs ilyen ügyfél" << std::endl;
                 continue;
             }
-            //u = ugyfelek[sorszam];
             befizet(ugyfelek[sorszam], osszeg);
         }
         else if(opcio == "el"){
-            //std::cout << "egyenleg lekérdez, parancs: " << opcio << std::endl;
             int az;
             std::cout << "Ügyfél azonosító: ";
             std::cin >> az;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő azonosító" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Ügyfél azonosító: ";
+                std::cin >> az;
             }
             Ugyfel u;
             int sorszam = ugyfelek.lookup(az);
@@ -366,22 +388,25 @@ int main() {
             std::cout << "A " << az << " szamú ügyfél egyenlege: " << egyenlegLekerdez(u) << std::endl;
         }
         else if(opcio == "bf"){
-            //std::cout << "fogyasztas lekerdez, parancs: " << opcio << std::endl;
             int az;
             double fogyasztas;
             std::cout << "Ügyfél azonosító: ";
             std::cin >> az;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő azonosító" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Ügyfél azonosító: ";
+                std::cin >> az;
             }
             std::cout << "Fogyasztas: ";
             std::cin >> fogyasztas;
-            if(std::cin.fail()){
+            while(std::cin.fail()){
                 std::cout << "Nem megfelelő formátum" << std::endl;
                 std::cin.clear();
-                continue;
+                std::cin.ignore(256, '\n');
+                std::cout << "Fogyasztas: ";
+                std::cin >> az;
             }
             Ugyfel u;
             int sorszam = ugyfelek.lookup(az);
@@ -389,9 +414,8 @@ int main() {
                 std::cout << "Nincs ilyen ügyfél" << std::endl;
                 continue;
             }
-            //u = ugyfelek[sorszam];
             ugyfelek[sorszam].fogyasztasBejelent(fogyasztas);
-            std::cout << "A " << sorszam << " szamú ügyfél új fogyasztása: " << fogyasztas;
+            std::cout << "A " << sorszam << " szamú ügyfél új fogyasztása: " << fogyasztas << std::endl;
 
         }
         else if (opcio == "q" || opcio == "exit") {
@@ -405,5 +429,8 @@ int main() {
 
 #endif //MENU
 
+#ifdef TESTESETEK
+    return 0;
+#endif //TESTESETEK
 
 }

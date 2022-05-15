@@ -6,7 +6,6 @@
 #define SRC_BASE_H
 
 #include "date.h"
-#include "debug.h"
 
 /// =========================== Base osztály =================================== ///
 /// alaposztály amiből az Ügyfél és a Szerzdés örököl, dátumot és azonosítót.

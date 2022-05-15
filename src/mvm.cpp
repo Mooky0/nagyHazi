@@ -2,10 +2,7 @@
 // Created by tothg on 14/04/2022.
 //
 
-/// A kiírásokhoz Makró, ha def-elt kiír, ha nem, nem.
-//#define DEBUG
 #include "mvm.h"
-#include "fstream"
 #include "iostream"
 
 /// Egyéb függvények:
@@ -13,16 +10,11 @@ void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig, Set<U
     int interval = meddig - mettol;
     double honapok = interval / 30.0;
     double fizetendo = honapok * szerzodes.getAr();
-    Pr("napok =" << interval << " Honapk: " << honapok << " fizetendo: " << fizetendo);
-    Pr(szerzodes);
     int az = ugyfelek.lookup(szerzodes.getUgyfel());
-    //std::cout << az << std::endl;
     if (az == -1){
         throw std::out_of_range("Nincs ilyen");
     }
     ugyfelek[az].Ugyfel::egyenlegLevon(fizetendo);
-    //std::cout << fizetendo << std::endl;
-    Pr(szerzodes);
 }
 
 void befizet(Ugyfel &ugyfel, double osszeg) {
@@ -35,29 +27,29 @@ double egyenlegLekerdez(const Ugyfel &ugyfel) {
 
 void fileKiir(const Set<Ugyfel>& s0, const Set<Szerzodes>& s1) {
     std::ofstream ugyfelekFile("ugyfelek.txt");
-    //ugyfelekFile << "Hello world!" << std::endl;
     for ( int i = 0; i < s0.size(); i++){
-        ugyfelekFile << s0[i].getId() << s0[i].getNevStr() << " " << s0[i].getEgyenleg() << " " << s0[i].getMiota() << " "
-            << s0[i].getDate().getEv() << " " << s0[i].getDate().getHo() << " " << s0[i].getDate().getNap() << std::endl;
+        ugyfelekFile << s0[i].getId() << " " << s0[i].getNevStr() << s0[i].getEgyenleg() << " " << s0[i].getMiota() << " "
+            << s0[i].getDate().getEv() << " " << s0[i].getDate().getHo() << " " << s0[i].getDate().getNap();
+        if(i != s0.size()-1)
+            ugyfelekFile << std::endl;
     }
     ugyfelekFile.close();
     std::ofstream szerzFile("szerzodesek.txt");
     for (int i = 0; i < s1.size(); i++){
         szerzFile << s1[i].getId() << " " << s1[i].getUgyfel() << " "
-        << s1[i].getAr() << " " << s1[i].getDate().getEv() << " "  << s1[i].getDate().getHo() << " " << s1[i].getDate().getNap() << std::endl;
+        << s1[i].getAr() << " " << s1[i].getDate().getEv() << " "  << s1[i].getDate().getHo() << " " << s1[i].getDate().getNap();
+        if (i != s1.size()-1)
+            szerzFile << std::endl;
     }
     szerzFile.close();
 }
 
 Set<Ugyfel> ugyfelekBeolvas() {
     std::ifstream ugyfelekFile("ugyfelek.txt");
-    //Ugyfel u;
     Set<Ugyfel> s; /// Ezt adjuk majd vissza, a Set;
     String nev;
     int id, egyenleg, miota, ev, ho, nap;
-    Pr("Igen");
     while(!ugyfelekFile.eof()) {
-        Pr("insert előtt");
         ugyfelekFile >> id;
         char c;
         nev = String("");
@@ -75,11 +67,13 @@ Set<Ugyfel> ugyfelekBeolvas() {
         }
         ugyfelekFile.setf(fl);
         ugyfelekFile >> egyenleg >> miota >> ev >> ho >> nap;
-        s.insert(Ugyfel(nev, id, Date(ev, ho, nap), miota));
-        Pr("Instert után");
+        s.insert(Ugyfel(nev, id, Date(ev, ho, nap), miota, egyenleg));
     }
-    if(!ugyfelekFile.eof())
+    if(!ugyfelekFile.eof()){
+        ugyfelekFile.close();
         throw "Hibás a fáj formátuma";
+
+    }
     ugyfelekFile.close();
     return s;
 }
