@@ -38,3 +38,6 @@ main
 *test*
 src/test/test
 src/test/test.cpp
+src/html/
+src/latex/
+src/uj

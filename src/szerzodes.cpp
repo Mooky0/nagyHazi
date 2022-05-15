@@ -43,10 +43,31 @@ std::istream& operator>>(std::istream& is, Szerzodes& rhs){
     is >> datum;
     std::cout << "Ügyfél azonosítója: ";
     is >> ugyfelaz;
+    while(is.fail()){
+        std::cout << "Nem megfelelő azonosító" << std::endl;
+        is.clear();
+        is.ignore(256, '\n');
+        std::cout << "Ügyfél azonosító: ";
+        std::cin >> ugyfelaz;
+    }
     std::cout << "Havidíj: ";
     is >> ar;
-    std::cout << "Azonosító: ";
+    while(is.fail()){
+        std::cout << "Nem megfelelő azonosító" << std::endl;
+        is.clear();
+        is.ignore(256, '\n');
+        std::cout << "Havidíj: ";
+        is >> ar;
+    }
+    std::cout << "Szerződés azonosító: ";
     std::cin >> az;
+    while(is.fail()){
+        std::cout << "Nem megfelelő azonosító" << std::endl;
+        is.clear();
+        is.ignore(256, '\n');
+        std::cout << "Szerződés azonosító: ";
+        is >> az;
+    }
     rhs.setAr(ar);
     rhs.setId(az);
 

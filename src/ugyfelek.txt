@@ -1,5 +1,5 @@
 1 Vicc Elek1500 5 1998 9 20
-2 Nem Tudom360 2 2003 1 29
+2 Példa János360 2 2003 1 29
 3 Almás Pite549 18 2003 3 4
 4 Rick Dalton565452 45 1969 8 9
 5 Andy Dufresne0 63 1995 5 15
