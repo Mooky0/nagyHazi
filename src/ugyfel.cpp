@@ -55,12 +55,6 @@ Ugyfel& Ugyfel::operator=(const Ugyfel& rhs){
     }
     return *this;
 }
-//std::ostream& operator<<(std::ostream& os, const Ugyfel& rhs){
-//    os << rhs.getNev() << "(" << rhs.getId()  << ") született: " << rhs.getSzulEv()
-//        << ", nevű ügyfél adatati:\n\tEgyenleg:" << rhs.getEgyenleg() << "\n\tÜgyfél "
-//        << rhs.getMiota() << "hónapja." << std::endl;
-//    return os;
-//}
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs){
     os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getDate()
        << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
@@ -77,13 +71,16 @@ std::istream& operator>>(std::istream& is, Ugyfel& rhs){
     String neve;
     int id;
     Date szul;
-    int mikor;
+    std::cout << "Adja meg a nevt: ";
     is >> neve;
-    is >> id >> szul >> mikor;
+    std::cout << "Azonosító: ";
+    is >> id;
+    std::cout << "Születési dátum: ";
+    is >> szul;
 
     rhs.setNev(neve);
     rhs.setId(id);
-    rhs.setMiota(mikor);
+    rhs.setMiota(0);
     rhs.setDate(szul);
     // rhs = Ugyfel(neve, id, szul, mikor);
     return is;

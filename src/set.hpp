@@ -17,7 +17,7 @@ public:
     }
     int size() const {return n;}
     bool isElement(T par) {
-        Pr("Hello");
+        /*Pr("Hello");*/
         for (int i =0; i < n; i++)
             if (adat[i] == par)
                 return true;
@@ -43,13 +43,11 @@ public:
         delete [] temp;
     }
     T& operator[](int idx) const{
-        if (idx < 0 || idx > n)
-            throw std::out_of_range("Hello");
+        if (idx < 0 || idx > n){
+            throw std::out_of_range("Túlindexelés");}
         return adat[idx];
     }
     Set& operator=(const Set& rhs){
-        /*if (this == rhs)
-            return *this;*/
         delete[] this->adat;
         this->n = rhs.n;
         this->adat = new T[n];
@@ -57,6 +55,17 @@ public:
             this->adat[i] = rhs[i];
         }
         return *this;
+    }
+
+    int lookup(int az) const{
+        if (n == 0){
+            return -1;
+        }
+        for (int i = 0; i < n; i++){
+            if(adat[i].getId() == az)
+                return i;
+        }
+        return -1;
     }
 
     ~Set(){delete [] adat;}

@@ -35,7 +35,12 @@ std::ostream& operator<<(std::ostream& os, const Date& rhs){
 /// istream:
 std::istream& operator>>(std::istream& is, Date& rhs){
     int ev, ho, nap;
-    is >> ev >> ho >> nap;
+    std::cout << "Év: ";
+    is >> ev;
+    std::cout << "honap: ";
+    is >> ho;
+    std::cout << "nap: ";
+    is >> nap;
     rhs = Date(ev, ho, nap);
     return is;
 }

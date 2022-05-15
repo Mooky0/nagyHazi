@@ -6,25 +6,26 @@
 
 
 /// Szerződés osztály
-Szerzodes::Szerzodes(int e, int h, int n, const Ugyfel& kicsoda, int ar = 300, int az = 987)
-        :Base(az, e, h, n), ugyfel(kicsoda), ar(ar) {
+Szerzodes::Szerzodes(int e, int h, int n, int kicsoda, int ar = 300, int az = 987)
+        :Base(az, e, h, n), ugyfelId(kicsoda), ar(ar) {
     //Pr(this->getDate());
 }
 
-Szerzodes::Szerzodes(const Date& date, const Ugyfel& kicsoda, int ar = 300, int az = 987)
-        : Base(az, date), ugyfel(kicsoda), ar(ar) {
+Szerzodes::Szerzodes(const Date& date, int kicsoda, int ar = 300, int az = 987)
+        : Base(az, date), ugyfelId(kicsoda), ar(ar) {
     //Pr("Szerződés ctor: " << this->getDate());
 }
 
-//int Szerzodes::getId() const {return id;}
-//Date Szerzodes::getDate() const {return date;}
-Ugyfel& Szerzodes::getUgyfel() const {return (Ugyfel &) ugyfel;}
+Szerzodes::Szerzodes(const Szerzodes &rhs): Base(rhs.id, rhs.date), ugyfelId(rhs.ugyfelId), ar(rhs.ar) {
+}
+
+int Szerzodes::getUgyfel() const {return ugyfelId;}
 int Szerzodes::getAr() const {return ar;}
 
 bool Szerzodes::operator==(const Szerzodes &rhs) const {
     return id == rhs.id &&
            date == rhs.date &&
-           ugyfel == rhs.ugyfel &&
+           ugyfelId == rhs.ugyfelId &&
            ar == rhs.ar;
 }
 
@@ -38,12 +39,20 @@ std::istream& operator>>(std::istream& is, Szerzodes& rhs){
     int az;
     Date datum;
     Ugyfel ugyfel;
+    int ugyfelaz;
     int ar;
-    is >> az >> datum >> ugyfel >> ar;
-    //Pr(ugyfel);
+    std::cout << "Megkötés dátuma: ";
+    is >> datum;
+    std::cout << "Ügyfél azonosítója: ";
+    is >> ugyfelaz;
+    std::cout << "Havidíj: ";
+    is >> ar;
+    std::cout << "Azonosító: ";
+    std::cin >> az;
     rhs.setAr(ar);
     rhs.setId(az);
-    rhs.setUgyfel(ugyfel);
+
+    rhs.setUgyfel(ugyfelaz);
     rhs.setDate(datum);
     return is;
 }

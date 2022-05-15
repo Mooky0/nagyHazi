@@ -55,7 +55,7 @@ String::~String() {
 }
 
 /// operator=
-String &String::operator=(const String str) {
+String &String::operator=(const String& str) {
     delete[] pData;
     len = strlen(str.c_str());
     pData = new char [len + 1];
@@ -78,7 +78,7 @@ char& String::operator[](size_t idx) {
 /// + operátorok:
 ///                 String-hez jobbról karaktert ad (addString)
 ///                 String-hez String-et ad (addString)
-String String::operator+(const String str) const {
+String String::operator+(const String& str) const {
     String res;
     res.len = this->len + str.len;
     res.pData = new char[res.len +1];
@@ -96,7 +96,7 @@ String String::operator+(const char c) const {
     return res;
 }
 
-String operator+(char c, String str){
+String operator+(char c, const String& str){
     String s1(c);
     return s1 + str;
 }
@@ -121,7 +121,7 @@ std::istream& operator>>(std::istream& is, String& rhs){
     is.setf(std::ios_base::skipws);
     while(is >> c){
         is.unsetf(std::ios_base::skipws);
-        if (c == '\n' || c == '\0' || isdigit(c)) {
+        if (c == '\n' || c == '\0' /*|| isdigit(c)*/) {
             is.putback(c);
             break;
         } else {
@@ -137,6 +137,11 @@ std::istream& operator>>(std::istream& is, String& rhs){
 bool String::operator==(const String &rhs) const {
     return (strcmp(this->c_str(), rhs.c_str()) == 0);
 }
+
+bool String::operator==(const char *rhs) const {
+    return  (strcmp(this->c_str(), rhs) == 0);
+}
+
 String& String::operator=(const char * rhs){
     len = strlen(rhs);
     delete [] pData;

@@ -90,6 +90,9 @@
 
 #include <iostream>
 
+/// Ez nincs az eredetiben, a split-hez kell
+#include "set.hpp"
+
 #ifndef MEMTRACE
 #error "definialja projekt szinten a MEMTARCE makrot!"
 #endif // MEMTRACE
@@ -151,8 +154,8 @@ public:
 
     ~String();
 
-    String& operator=(String str);
-    String operator+(String str) const;
+    String& operator=(const String& str);
+    String operator+(const String& str) const;
     String operator+(char c) const;
 
     char& operator[](size_t idx);
@@ -160,6 +163,7 @@ public:
 
     /// Kiegészítés
     bool operator==(const String& rhs) const;
+    bool  operator==(const char * rhs) const;
     String& operator=(const char * rhs);
 
 
@@ -167,9 +171,10 @@ public:
 
 /// Ide kerülnek a globális operátorok deklarációi.
 /// ...
-String operator+(char c, String str);
+String operator+(char c, const String& str);
 std::ostream& operator<<(std::ostream& os, const String& rhs);
 std::ofstream& operator<<(std::ofstream& os, const String& rhs);
 std::istream& operator>>(std::istream& is, String& rhs);
+std::ifstream& operator>>(std::ifstream& is, String& rhs);
 
 #endif

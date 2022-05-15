@@ -3,10 +3,10 @@
 #include "string5.h"
 #include "mvm.h"
 //#define MEMTRACE
-#include "memtrace.h"
+//#include "memtrace.h"
 
 #define MENU ///Ha a menürendszert szeretnénk futtatni
-//#define TESTESETEK /// Ha a teszteseteket szeretnénk futtatni
+#define TESTESETEK /// Ha a teszteseteket szeretnénk futtatni
 
 #ifdef TESTESETEK
 #include "gtest_lite.h"
@@ -59,12 +59,12 @@ int main() {
     END
     TEST(Ugyfel, Input)
         Ugyfel u2/*("Helloka Belloka", 120, 2000, 15)*/;
-        std::istringstream iss("Helloka Belloka\n120 2000 0 0 15");
+        std::istringstream iss("Helloka Belloka\n120 2000 0 0");
         iss >> u2;
         EXPECT_STREQ("Helloka Belloka", u2.getNevChar());
         EXPECT_EQ(120, u2.getId());
         EXPECT_EQ(Date(2000), u2.getDate());
-        EXPECT_EQ(15, u2.getMiota());
+        EXPECT_EQ(0, u2.getMiota());
     END
 
     TEST(Ugyfel, befizet)
@@ -87,46 +87,31 @@ int main() {
 
     TEST(Szerzodes, Konstruktor)
         Ugyfel u0("Enci Penci2", 124, Date(2013), 6);
-        Szerzodes sz0(2003, 1, 29, u0, 300, 987);
+        Szerzodes sz0(2003, 1, 29, 123, 300, 987);
         EXPECT_EQ(Date(2003, 1, 29), sz0.getDate());
-        EXPECT_EQ(Ugyfel("Enci Penci2", 124, Date(2013), 6), sz0.getUgyfel());
+        EXPECT_EQ(123, sz0.getUgyfel());
         EXPECT_EQ(300, sz0.getAr());
         EXPECT_EQ(987, sz0.getId());
 
         Date d0(2000, 8, 6);
-        Szerzodes sz1(d0, u0, 500, 654);
+        Szerzodes sz1(d0, 111, 500, 654);
         EXPECT_EQ(Date(2000, 8, 6), sz1.getDate());
-        EXPECT_EQ(Ugyfel("Enci Penci2", 124, Date(2013), 6), sz1.getUgyfel());
+        EXPECT_EQ(111, sz1.getUgyfel());
         EXPECT_EQ(500, sz1.getAr());
         EXPECT_EQ(654, sz1.getId());
-    END
-    TEST(Szerzodes, Input)
-        Szerzodes sz0;
-        std::istringstream iss("45 1970 01 01Random Ugyfél\n666 1600 0 0 3 600"); /// Sz.id, Sz.Dátum, U.nev, U.az, U.szulDátum, U.miotam, Sz.ar
-        Pr("tudod hol kell keresni ;)");
-        iss >> sz0;
-        Pr("Itt is jó");
-        EXPECT_EQ(45, sz0.getId());
-        Pr("Eddig jó");
-        EXPECT_EQ(Date(1970, 01, 01), sz0.getDate());
-        Pr("Még megvan!");
-        Ugyfel u0("Random Ugyfél", 666, Date(1600), 3);
-        Pr("Az ugyfél ctor jó:" << u0);
-        //std::cout << "sz0 Ugyfele:" << sz0.getUgyfel();
-        EXPECT_EQ(u0, sz0.getUgyfel());
-        //std::cout << "Még megvan!2" << std::endl;
-        EXPECT_EQ(600, sz0.getAr());
     END
 
     TEST(Szamlazas, Szamlaz)
         Ugyfel u0("Szió Mió", 126, Date(2005), 6);
         u0.setEgyenleg(1500);
-        Szerzodes sz0(2003, 1, 29, u0, 300, 987);
+        Szerzodes sz0(2003, 1, 29, 126, 300, 987);
         Date d0(2022, 2, 1);
         Date d1(2021, 10, 5);
-        szamlaz(sz0, d1, d0);
+        Set<Ugyfel> set;
+        set.insert(u0);
+        EXPECT_NO_THROW(szamlaz(sz0, d1, d0, set));
         //EXPECT_TRUE(gtest_lite::almostEQ(310.0, sz0.getUgyfel().getEgyenleg()));
-        EXPECT_EQ(310.0, sz0.getUgyfel().getEgyenleg());
+        EXPECT_EQ(310.0, set[0].getEgyenleg());
     END
 
 
@@ -174,15 +159,6 @@ int main() {
             EXPECT_FALSE(s0.isElement('b'));
         } ENDM
 
-    /// insert és isElement tesztelése Integer-re
-    /*
-    TEST(Integer, insert) {
-            Set<Integer> s0;
-            s0.insert(Integer(1));
-            EXPECT_TRUE(s0.isElement(Integer(1)));
-            EXPECT_FALSE(s0.isElement(Integer(120)));
-        } ENDM
-    */
 
     /// insert és isElement tesztelése Ugyfél-re, amikor mindkét koordináta számít az összehasonlításban
     TEST(Ugyfel, insert) {
@@ -195,18 +171,16 @@ int main() {
     /// insert és isElement tesztelése Szerződés-re, amikor mindkét koordináta számít az összehasonlításban
     TEST(Szerzodes, insert) {
             Set<Szerzodes> s0;
-            Ugyfel u0("Csá", 123, Date(2006, 0, 0), 3);
-            s0.insert(Szerzodes(2003, 1, 29, u0, 300, 987));
-            EXPECT_TRUE(s0.isElement(Szerzodes(2003, 1, 29, u0, 300, 987)));
-            EXPECT_FALSE(s0.isElement(Szerzodes(1999, 05, 14, u0, 300, 987)));
-            EXPECT_FALSE(s0.isElement(Szerzodes(2003, 1, 29, u0, 5, 456)));
-        } ENDM
+            s0.insert(Szerzodes(2003, 1, 29, 0, 300, 987));
+            EXPECT_TRUE(s0.isElement(Szerzodes(2003, 1, 29, 0, 300, 987)));
+            EXPECT_FALSE(s0.isElement(Szerzodes(1999, 05, 14, 0, 300, 987)));
+            EXPECT_FALSE(s0.isElement(Szerzodes(2003, 1, 29, 0, 5, 456)));
+    } ENDM
 
-    TEST(Random, valami)
-        std::cout << "Szia!" << std::endl;
+    TEST(Fálj, kezelés)
         Ugyfel u0("Vicc Elek", 1, Date(2022, 5, 9));
         //ASSERT_NO_THROW(std::cout << u0;)
-        Szerzodes sz0(Date(), u0, 11, 12);
+        Szerzodes sz0(Date(), 0, 11, 12);
         //ASSERT_NO_THROW(std::cout << sz0;)
         Set<Ugyfel> s0;
         s0.insert(u0);
@@ -223,7 +197,8 @@ int main() {
         EXPECT_NO_THROW(s3 = szerzodesekBeolvas());
         Pr(s3[0] << s3[1]);
     END
-    #endif //TESTESETEK
+
+#endif //TESTESETEK
     // Itt a vége ha a teszteseteket futtatjuk
 
     ///A használható menürendszer:
@@ -231,13 +206,204 @@ int main() {
 
     String opcio;
 
+    Set<Ugyfel> ugyfelek;
+    ugyfelek = ugyfelekBeolvas();
+    Set<Szerzodes> szerzodesek;
+    szerzodesek = szerzodesekBeolvas();
+
     std::cout << "HVM nyilvántartórendszer:" << std::endl;
-    std::cout << "Új ügyfél felvétele:\t [uj u]\nÚj szerződés felvétele:\t [uj sz]\nSzerződések kiírása:\t [ki sz]\n"
-        << "Ügyfelek kiírása:\t [ki u]\nSzamlazas:\t szamla [szID] [mettol] [meddig]" << std::endl << ">";
-    std::cin >> opcio;
-    std::cout << opcio;
+    std::cout << "Ügyfél adatinak felvétele:\t [uj]\n"
+        << "szolgáltatási szerződés kötése:\t [uj]\n"
+         <<"Szerződések kiírása:\t\t [ki]\n"
+        << "Ügyfelek kiírása:\t\t [ki]\n"
+        << "szolgáltatási díj előírása:\t [szamla]\n"
+        << "szolgáltatási díj befizetése:\t [bef]\n"
+        << "Ügyfél egyenleg lekérdezése:\t [el]\n"
+        << "Fogyasztás bejelentése:\t\t [bf]\n"
+        << "Kilépés: \t\t\t [q]/[exit]"
+        << std::endl;
+
+    while(true) {
+        String al;
+        std::cout << ">>";
+        std::cin >> opcio;
+        if(std::cin.fail()){
+            std::cout << "Nem megfelelő formátum" << std::endl;
+            std::cin.clear();
+            continue;
+        }
+        //std::cout << opcio << std::endl;
+
+
+        if (opcio == "uj") {
+            std::cout << "mit?" << std::endl <<  ">>";
+            std::cin >> al;
+            if (al == "u"){
+                Ugyfel u;
+                std::cin >> u;
+                if(std::cin.fail()){
+                    std::cout << "Nem megfelelő formátum" << std::endl;
+                    std::cin.clear();
+                    continue;
+                }
+                ugyfelek.insert(u);
+            }
+            else if (al == "sz") {
+                //std::cout << "Új szerződés:" << std::endl;
+                Szerzodes sz;
+                std::cin >> sz;
+                if(std::cin.fail()){
+                    std::cout << "Nem megfelelő formátum" << std::endl;
+                    std::cin.clear();
+                    continue;
+                }
+                szerzodesek.insert(sz);
+            }
+            else
+                std::cout << "Argumentumok hiányoznak az \"uj\"-hoz" << std::endl;
+        }
+        if (opcio == "ki") {
+            std::cout << "mit?" << std::endl <<  ">>";
+            std::cin >> al;
+            if (al == "u"){
+                if (ugyfelek.size() == 0) {
+                    std::cout << "Nincs tárolt elem";
+                    continue;
+                }
+                for (int i = 0; i < ugyfelek.size(); ++i) {
+                    std::cout << ugyfelek[i];
+                }
+            }
+            else if (al == "sz") {
+                if (szerzodesek.size() == 0) {
+                    std::cout << "Nincs tárolt elem";
+                    continue;
+                }
+                for (int i = 0; i < szerzodesek.size(); ++i) {
+                    std::cout << szerzodesek[i];
+                }
+            }
+            else
+                std::cout << "Argumentumok hiányoznak az \"uj\"-hoz" << std::endl;
+        }
+        else if(opcio == "szamla"){
+            int az;
+            Date mettol, meddig;
+            std::cout << "Szerződés azonosító: ";
+            std::cin >> az;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő azonosító" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            std::cout << "Mettől: ";
+            std::cin >> mettol;
+            std::cout << "Meddig: ";
+            std::cin >> meddig;
+            if(std::cin.fail()) {
+                std::cout << "Nem megfelelő bemenet";
+                std::cout.clear();
+                continue;
+            }
+            Szerzodes sz;
+            int sorszam = szerzodesek.lookup(az);
+            if(sorszam < 0){
+                std::cout << "Nincs ilyen szerződés" << std::endl;
+                continue;
+            }
+            sz = szerzodesek[sorszam];
+            try {
+                szamlaz(sz, mettol, meddig, ugyfelek);
+            }
+            catch (std::out_of_range&){
+                std::cout << "Nincs ilyen ügyfél";
+            }
+        }
+        else if(opcio == "bef"){
+            //std::cout << "befizet, parancs: " << opcio << std::endl;
+            int az;
+            double osszeg;
+            std::cout << "Ügyfél formátum: ";
+            std::cin >> az;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő azonosító" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            std::cout << "Befizetett összeg: ";
+            std::cin >> osszeg;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő formátum" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            Ugyfel u;
+            int sorszam = ugyfelek.lookup(az);
+            if(sorszam < 0){
+                std::cout << "Nincs ilyen ügyfél" << std::endl;
+                continue;
+            }
+            //u = ugyfelek[sorszam];
+            befizet(ugyfelek[sorszam], osszeg);
+        }
+        else if(opcio == "el"){
+            //std::cout << "egyenleg lekérdez, parancs: " << opcio << std::endl;
+            int az;
+            std::cout << "Ügyfél azonosító: ";
+            std::cin >> az;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő azonosító" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            Ugyfel u;
+            int sorszam = ugyfelek.lookup(az);
+            if(sorszam < 0){
+                std::cout << "Nincs ilyen ügyfél" << std::endl;
+                continue;
+            }
+            u = ugyfelek[sorszam];
+            std::cout << "A " << az << " szamú ügyfél egyenlege: " << egyenlegLekerdez(u) << std::endl;
+        }
+        else if(opcio == "bf"){
+            //std::cout << "fogyasztas lekerdez, parancs: " << opcio << std::endl;
+            int az;
+            double fogyasztas;
+            std::cout << "Ügyfél azonosító: ";
+            std::cin >> az;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő azonosító" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            std::cout << "Fogyasztas: ";
+            std::cin >> fogyasztas;
+            if(std::cin.fail()){
+                std::cout << "Nem megfelelő formátum" << std::endl;
+                std::cin.clear();
+                continue;
+            }
+            Ugyfel u;
+            int sorszam = ugyfelek.lookup(az);
+            if(sorszam < 0){
+                std::cout << "Nincs ilyen ügyfél" << std::endl;
+                continue;
+            }
+            //u = ugyfelek[sorszam];
+            ugyfelek[sorszam].fogyasztasBejelent(fogyasztas);
+            std::cout << "A " << sorszam << " szamú ügyfél új fogyasztása: " << fogyasztas;
+
+        }
+        else if (opcio == "q" || opcio == "exit") {
+            fileKiir(ugyfelek, szerzodesek);
+            std::cout << "Kilépés" << std::endl;
+            return 0;
+        }
+        else
+            std::cout << "Ismeretlen parancs: " << opcio << std::endl;
+    }
 
 #endif //MENU
 
-    return 0;
+
 }

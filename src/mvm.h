@@ -22,7 +22,7 @@
 /// @param szerzodes - A szerződés ami alapján előállítják a számlát
 /// @param meddig - a számlázott időintervallum eleje
 /// @param meddig - a számlázott időintervallum vége
-void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig);
+void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig, Set<Ugyfel>& ugyfelek);
 
 /// Befizetés:
 /// Ugyfél szolgáltalási díjának befizetése

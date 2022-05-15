@@ -9,13 +9,19 @@
 #include "iostream"
 
 /// Egyéb függvények:
-void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig) {
+void szamlaz(Szerzodes& szerzodes, const Date& mettol, const Date& meddig, Set<Ugyfel>& ugyfelek) {
     int interval = meddig - mettol;
     double honapok = interval / 30.0;
     double fizetendo = honapok * szerzodes.getAr();
     Pr("napok =" << interval << " Honapk: " << honapok << " fizetendo: " << fizetendo);
     Pr(szerzodes);
-    szerzodes.getUgyfel().Ugyfel::egyenlegLevon(fizetendo);
+    int az = ugyfelek.lookup(szerzodes.getUgyfel());
+    //std::cout << az << std::endl;
+    if (az == -1){
+        throw std::out_of_range("Nincs ilyen");
+    }
+    ugyfelek[az].Ugyfel::egyenlegLevon(fizetendo);
+    //std::cout << fizetendo << std::endl;
     Pr(szerzodes);
 }
 
@@ -37,8 +43,7 @@ void fileKiir(const Set<Ugyfel>& s0, const Set<Szerzodes>& s1) {
     ugyfelekFile.close();
     std::ofstream szerzFile("szerzodesek.txt");
     for (int i = 0; i < s1.size(); i++){
-        szerzFile << s1[i].getId() << " " << s1[i].getUgyfel().getNevStr() << " " << s1[i].getUgyfel().getEgyenleg() << " " << s1[i].getUgyfel().getMiota() << " "
-        << s1[i].getUgyfel().getDate().getEv() << " " << s1[i].getUgyfel().getDate().getHo() << " " << s1[i].getUgyfel().getDate().getNap() << " "
+        szerzFile << s1[i].getId() << " " << s1[i].getUgyfel() << " "
         << s1[i].getAr() << " " << s1[i].getDate().getEv() << " "  << s1[i].getDate().getHo() << " " << s1[i].getDate().getNap() << std::endl;
     }
     szerzFile.close();
@@ -51,9 +56,25 @@ Set<Ugyfel> ugyfelekBeolvas() {
     String nev;
     int id, egyenleg, miota, ev, ho, nap;
     Pr("Igen");
-    while(ugyfelekFile >> id >> nev  >> egyenleg >> miota >> ev >> ho >> nap) {
-        //std::cout << std::endl << "Vége" << std::endl;
+    while(!ugyfelekFile.eof()) {
         Pr("insert előtt");
+        ugyfelekFile >> id;
+        char c;
+        nev = String("");
+        std::ios_base::fmtflags fl = ugyfelekFile.flags();
+        ugyfelekFile.setf(std::ios_base::skipws);
+        while(ugyfelekFile >> c){
+            ugyfelekFile.unsetf(std::ios_base::skipws);
+            if (c == '\n' || c == '\0' || isdigit(c)) {
+                ugyfelekFile.putback(c);
+                break;
+            } else {
+                nev = nev + c;
+            }
+
+        }
+        ugyfelekFile.setf(fl);
+        ugyfelekFile >> egyenleg >> miota >> ev >> ho >> nap;
         s.insert(Ugyfel(nev, id, Date(ev, ho, nap), miota));
         Pr("Instert után");
     }
@@ -67,10 +88,10 @@ Set<Szerzodes> szerzodesekBeolvas() {
     std::ifstream szerzFile("szerzodesek.txt");
     Set<Szerzodes> s;
     String nev;
-    int az, egyenleg, miota, uev, uho, unap, ar, szev, szho, sznap;
-    while(szerzFile >> az >> nev >> egyenleg >> miota >> uev >> uho >> unap >> ar >> szev >> szho >> sznap){
-        Ugyfel u(nev, az, Date(uev, uho, unap), miota);
-        s.insert(Szerzodes(szev, szho, sznap, u, ar, az));
+    int az, ar, szev, szho, sznap;
+    int uaz;
+    while(szerzFile >> az >> uaz >> ar >> szev >> szho >> sznap){
+        s.insert(Szerzodes(szev, szho, sznap, uaz, ar, az));
     }
     if(!szerzFile.eof())
         throw "Hibás a fáj formátuma";
