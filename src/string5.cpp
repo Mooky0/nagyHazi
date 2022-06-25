@@ -107,12 +107,6 @@ std::ostream& operator<<(std::ostream& os, const String& rhs){
     return os;
 }
 
-std::ofstream& operator<<(std::ofstream& ofs, const String& rhs){
-    ofs << rhs.c_str();
-    return ofs;
-}
-
-
 /// >> operátor, ami beolvas az istream-ről egy szót
 std::istream& operator>>(std::istream& is, String& rhs){
     char c;
@@ -121,7 +115,7 @@ std::istream& operator>>(std::istream& is, String& rhs){
     is.setf(std::ios_base::skipws);
     while(is >> c){
         is.unsetf(std::ios_base::skipws);
-        if (c == '\n' || c == '\0' /*|| isdigit(c)*/) {
+        if (c == '\n' || c == '\0') {
             is.putback(c);
             break;
         } else {

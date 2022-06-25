@@ -15,7 +15,6 @@
 int main() {
 
     #ifdef TESTESETEK
-    std::cout << "Hello, World!" << std::endl;
 
     TEST(Datumteszt, Konstruktor)
         Date d0(2022, 4, 14);
@@ -85,6 +84,20 @@ int main() {
         EXPECT_EQ(500, egyenlegLekerdez(u0));
     }END
 
+    TEST(Ugyfel, fogyasztas){
+        Ugyfel u0;
+        u0.setMiota(1);
+        u0.fogyasztasBejelent(300);
+        EXPECT_EQ(300.0, u0.getAvgFogyasztas());
+        u0.setMiota(5);
+        u0.fogyasztasBejelent(400);
+        u0.fogyasztasBejelent(200);
+        u0.fogyasztasBejelent(500);
+        u0.fogyasztasBejelent(250);
+        EXPECT_EQ(330.0, u0.getAvgFogyasztas());
+        EXPECT_EQ(5, u0.getMiota());
+    }END
+
     TEST(Szerzodes, Konstruktor)
         Ugyfel u0("Enci Penci2", 124, Date(2013), 6);
         Szerzodes sz0(2003, 1, 29, 123, 300, 987);
@@ -114,19 +127,6 @@ int main() {
     END
 
 
-    TEST(Ugyfel, fogyasztas)
-        Ugyfel u0;
-        u0.setMiota(1);
-        u0.fogyasztasBejelent(300);
-        EXPECT_EQ(300.0, u0.getAvgFogyasztas());
-        u0.setMiota(5);
-        u0.fogyasztasBejelent(400);
-        u0.fogyasztasBejelent(200);
-        u0.fogyasztasBejelent(500);
-        u0.fogyasztasBejelent(250);
-        EXPECT_EQ(330.0, u0.getAvgFogyasztas());
-        EXPECT_EQ(5, u0.getMiota());
-    END
 
     /// Ezek a 8-adik laborból a halmazok tesztjei
     TEST(int, insert) {
@@ -179,18 +179,16 @@ int main() {
         EXPECT_NO_THROW(s2 = ugyfelekBeolvas());
         EXPECT_EQ(1, s2[0].getId());
         EXPECT_STREQ("Vicc Elek", s2[0].getNevChar());
-            EXPECT_EQ(1500, s2[0].getEgyenleg());
-            EXPECT_EQ(5, s2[0].getMiota());
-            EXPECT_EQ(Date(1998, 9, 20), s2[0].getDate());
+        EXPECT_EQ(1500, s2[0].getEgyenleg());
+        EXPECT_EQ(5, s2[0].getMiota());
+        EXPECT_EQ(Date(1998, 9, 20), s2[0].getDate());
 
-            EXPECT_EQ(3, s2[2].getId());
-            EXPECT_STREQ("Almás Pite", s2[2].getNevChar());
-            EXPECT_EQ(549, s2[2].getEgyenleg());
-            EXPECT_EQ(18, s2[2].getMiota());
-            EXPECT_EQ(Date(2003, 3, 4), s2[2].getDate());
+        EXPECT_EQ(3, s2[2].getId());
+        EXPECT_STREQ("Almás Pite", s2[2].getNevChar());
+        EXPECT_EQ(549, s2[2].getEgyenleg());
+        EXPECT_EQ(18, s2[2].getMiota());
+        EXPECT_EQ(Date(2003, 3, 4), s2[2].getDate());
 
-        //Set<Szerzodes> s3;
-        //EXPECT_NO_THROW(s3 = szerzodesekBeolvas());
     }END
 
 #endif //TESTESETEK

@@ -7,7 +7,7 @@
 
 ///======================= Tároló osztály =======================///
 /// Ez az osztály a 8. labor megoldásom, kisebb módosításokkal.
-template<class T, int max = 10>
+template<class T, int max = 100>
 class Set{
     T *adat;    /// Adat tömb amit tárolunk
     int n;      /// tömb mérete
@@ -17,7 +17,6 @@ public:
     }
     int size() const {return n;}
     bool isElement(T par) {
-        /*Pr("Hello");*/
         for (int i =0; i < n; i++)
             if (adat[i] == par)
                 return true;

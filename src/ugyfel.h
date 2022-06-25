@@ -25,7 +25,6 @@ public:
     const char * getNevChar() const;
     String getNevStr() const;
     int getMiota() const;
-    int getMeret() const;
     double getEgyenleg() const;
     double getAvgFogyasztas() const;
 
@@ -50,7 +49,6 @@ public:
     bool operator==(Ugyfel* rhs) const;
 
     Ugyfel& operator=(const Ugyfel& rhs);
-    // const Ugyfel operator(const Ugyfel)(Ugyfel rhs){}
 
     /// dtor csak felszabít
     virtual ~Ugyfel(){
@@ -61,15 +59,6 @@ public:
 /// @param os - ostream;
 /// @param rhs - kiiírandó Ügyfél
 std::ostream& operator<<(std::ostream& os, Ugyfel& rhs);
-/*
-std::ostream& operator<<(std::ostream& os, Ugyfel rhs){
-    os << rhs.getNevStr() << "(" << rhs.getId()  << ") született: " << rhs.getDate()
-       << ", nevű ügyfél adatati:\n\tEgyenleg: " << rhs.getEgyenleg() << "\n\tÜgyfél "
-       << rhs.getMiota() << " hónapja." << std::endl;
-    return os;
-}*/
-
-std::ofstream& operator<<(std::ofstream& os, const Ugyfel& rhs);
 
 /// Insream operator
 /// @param is - istream;

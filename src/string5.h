@@ -43,7 +43,6 @@
  * azaz, sorban haladva ahol tart a feladatok megoldásában!
  * Ne hagyjon ki feladatot!
  */
-#define ELKESZULT 13
 
 /**
  * \section fel Feladat:
@@ -173,8 +172,6 @@ public:
 /// ...
 String operator+(char c, const String& str);
 std::ostream& operator<<(std::ostream& os, const String& rhs);
-std::ofstream& operator<<(std::ofstream& os, const String& rhs);
 std::istream& operator>>(std::istream& is, String& rhs);
-std::ifstream& operator>>(std::ifstream& is, String& rhs);
 
 #endif
